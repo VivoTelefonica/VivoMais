@@ -1,0 +1,77 @@
+﻿@model VivoMais.Models.SavingViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        $('#TableSaving').dataTable({
+
+            dom:
+             "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+             "<'row'<'col-sm-11'><'col-sm-1'T>>" +
+             "<'row'<'col-sm-12'tr>>" +
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            order: [[0, "desc"]],
+            bHeader: true,
+            tableTools: {
+                sSwfPath: "../swf/copy_csv_xls_pdf.swf",
+                aButtons: [
+                            {
+                                sExtends: "xls",
+                                sFileName: 'Saving.xls'
+                            }
+                ]
+            }
+
+        });
+    });
+</script>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="dataTable_wrapper">
+            <table class="table table-striped table-bordered nowrap" id="TableSaving">
+                <thead>
+                    <tr>
+                        <th nowrap>AÇÃO</th>
+                        <th nowrap>DDD</th>
+                        <th nowrap>REDE</th>
+                        <th nowrap>VALOR</th>
+                        <th nowrap>TIPO DE AÇÃO</th>
+                        <th nowrap>OPÇÃO DE AÇÃO</th>
+                        <th nowrap>MÊS</th>
+                        <th nowrap>OFERTA</th>
+                        <th nowrap>COMPROVANTE DE AÇÃO</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @if (Model != null)
+                    {
+                        if (Model.listaSaving != null)
+                        {
+                            foreach (VivoMais.Repositorio.Entidades.Saving saving in Model.listaSaving)
+                            {
+                                <tr class="odd gradeX">
+                                    <td nowrap>@saving.Descricao</td>
+                                    <td nowrap>@saving.Parceiro.Ddd</td>
+                                    <td nowrap>@saving.Parceiro.Rede</td>
+                                    <td nowrap>@saving.ValorAcao</td>
+                                    <td nowrap>@saving.TipoAcao</td>
+                                    <td nowrap>@saving.OpcaoAcao</td>
+                                    <td nowrap>@saving.MesAcao</td>
+                                    <td nowrap>@saving.Oferta</td>
+                                    <td nowrap><img src="/Saving/RetrieveImage/@saving.Id" alt="" height=100 width=200 /></td>
+                                </tr>
+                            }
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>

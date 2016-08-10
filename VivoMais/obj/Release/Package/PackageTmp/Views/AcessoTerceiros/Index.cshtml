@@ -1,0 +1,461 @@
+﻿@model VivoMais.Repositorio.Entidades.AcessoTerceiros
+@{
+    ViewBag.Title = "Index";
+    if (Session["TipoMenu"].ToString() != "")
+    {
+        Layout = Session["TipoMenu"].ToString();
+    }
+    else
+    {
+        Session.Clear();
+        Session.Abandon();
+        FormsAuthentication.SignOut();
+        Response.Redirect("/Acesso/Index");
+    }
+}
+
+@* Javascript *@
+<script type="text/javascript" src="~/Acesso/Js/jquery-2.2.1.js"></script>
+<script type="text/javascript" src="~/Scripts/ajax.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<script type="text/javascript">
+
+    function FuncSucesso(Data) {
+        alert('Acesso Solicitado com Sucesso!');
+        document.getElementById("formID").reset();
+    }
+
+    function FuncError(Data) {
+        alert('Ocorreu um erro ao tentar processar sua solicitação!');
+    }
+
+    $(document).ready(function () {
+
+        $("#btnSolicitar").click(
+            function () {
+                $.get(function (data) {
+                    $('#loading').hide();
+                });
+            }
+        );
+
+
+
+        $("#DDLRede").change(function () {
+            $("input[type=text], textarea").val("");
+
+            $("#loading").show();
+            $("#DDLAdabas").empty();
+            $.ajax({
+                type: 'POST',
+                url: '/AcessoTerceiros/CarregaAdabas',
+                dataType: 'json',
+                data: { Rede: $("#DDLRede").val() },
+
+                success: function (REDE) {
+                    $("#DDLAdabas").append("<option value=''>SELECIONE</option>");
+                    $.each(REDE, function (i, REDE) {
+                        $("#DDLAdabas").append('<option value="' + REDE + '">' + REDE + '</option>');
+                        $('#loading').hide();
+                    });
+                },
+                error: function (ex) {
+                    alert('Ocorreu um erro ao tentar processar sua solicitação.' + ex);
+                }
+            });
+            return false;
+        });
+
+        $("#DDLAdabas").change(function () {
+            $("#loading").show();
+            $.ajax({
+                dataType: "json",
+                type: 'GET',
+                url: '/AcessoTerceiros/CarregaInformacoesParceiros',
+                data: { Adabas: $("#DDLAdabas").val() },
+
+                success: function (Parceiros) {
+                    $('#loading').hide();
+                    $(Parceiros).each(function (i) {
+                        if (Parceiros != null) {
+                            $('#txtRua').val(Parceiros.Endereco);
+                            $('#txtNumero').val(Parceiros.Numero);
+                            $('#txtCidade').val(Parceiros.Cidade);
+                            $('#txtBairro').val(Parceiros.Bairro);
+                            $('#txtCEP').val(Parceiros.Cep);
+                            $('#txtEmailPessoal').val(Parceiros.EmailComercial);
+                            $('#txtTelefone').val(Parceiros.Telefone);
+                            $('#txtCelular').val(Parceiros.Celular);
+                            $('#txtNomeContato').val(Parceiros.Contato);
+                            $('#txtCnpj').val(Parceiros.Cnpj);
+
+                            $('#txtDataIni').val('@DateTime.Now.ToString("dd/MM/yyyy")');
+                            $('#txtDataFim').val('@DateTime.Now.AddYears(3).ToString("dd/MM/yyyy")');
+
+
+                            $("#DDLDdd").empty();
+                            $("#DDLEstado").empty();
+                            $("#DDLArea").empty();
+
+                            if (Parceiros.Uf == "AL") {
+                                //document.getElementById("DDLEstado").options[1].selected = true;
+
+                                $("#DDLEstado").append("<option value='AL Alagoas'>AL Alagoas</option>");
+                                $("#DDLArea").append("<option value='T-AL'>T-AL</option>");
+                                document.getElementById("txtSubarea").value = "0012 AL Sede";
+
+                                $("#DDLDdd").append("<option value=''>SELECIONE</option>");
+                                $("#DDLDdd").append("<option value='82'>82</option>");
+                            }
+                            else if (Parceiros.Uf == "BA") {
+                                $("#DDLEstado").append("<option value='BA Bahia'>BA Bahia</option>");
+                                $("#DDLArea").append("<option value='T-BA'>T-BA</option>");
+                                document.getElementById("txtSubarea").value = "0024 BA Sede";
+
+                                $("#DDLDdd").append("<option value=''>SELECIONE</option>");
+                                $("#DDLDdd").append("<option value='71'>71</option>");
+                                $("#DDLDdd").append("<option value='73'>73</option>");
+                                $("#DDLDdd").append("<option value='74'>74</option>");
+                                $("#DDLDdd").append("<option value='75'>75</option>");
+                                $("#DDLDdd").append("<option value='77'>77</option>");
+                            }
+                            else if (Parceiros.Uf == "CE") {
+                                $("#DDLEstado").append("<option value='CE Ceará'>CE Ceará</option>");
+                                $("#DDLArea").append("<option value='T-CE'>T-CE</option>");
+                                document.getElementById("txtSubarea").value = "0011 CE Sede";
+
+                                $("#DDLDdd").append("<option value=''>SELECIONE</option>");
+                                $("#DDLDdd").append("<option value='85'>85</option>");
+                                $("#DDLDdd").append("<option value='88'>88</option>");
+                            }
+                            else if (Parceiros.Uf == "PB") {
+                                $("#DDLEstado").append("<option value='PB Paraíba'>PB Paraíba</option>");
+                                $("#DDLArea").append("<option value='T-PB'>T-PB</option>");
+                                document.getElementById("txtSubarea").value = "0026 PB Sede";
+
+                                $("#DDLDdd").append("<option value=''>SELECIONE</option>");
+                                $("#DDLDdd").append("<option value='83'>83</option>");
+                            }
+                            else if (Parceiros.Uf == "PE") {
+                                $("#DDLEstado").append("<option value='PE Pernambuco'>PE Pernambuco</option>");
+                                $("#DDLArea").append("<option value='T-PE'>T-PE</option>");
+                                document.getElementById("txtSubarea").value = "0008 PE Sede";
+
+
+                                $("#DDLDdd").append("<option value=''>SELECIONE</option>");
+                                $("#DDLDdd").append("<option value='81'>81</option>");
+                                $("#DDLDdd").append("<option value='88'>88</option>");
+                            }
+                            else if (Parceiros.Uf == "PI") {
+                                $("#DDLEstado").append("<option value='PI Piauí'>PI Piauí</option>");
+                                $("#DDLArea").append("<option value='T-PI'>T-PI</option>");
+                                document.getElementById("txtSubarea").value = "0007 PI Sede";
+
+                                $("#DDLDdd").append("<option value=''>SELECIONE</option>");
+                                $("#DDLDdd").append("<option value='86'>86</option>");
+                                $("#DDLDdd").append("<option value='86'>86</option>");
+                            }
+                            else if (Parceiros.Uf == "RN") {
+                                $("#DDLEstado").append("<option value='RN Rio Grande do Norte'>RN Rio Grande do Norte</option>");
+                                $("#DDLArea").append("<option value='T-RN'>T-RN</option>");
+                                document.getElementById("txtSubarea").value = "0020 RN Sede";
+
+                                $("#DDLDdd").append("<option value=''>SELECIONE</option>");
+                                $("#DDLDdd").append("<option value='84'>84</option>");
+                            }
+                            else if (Parceiros.Uf == "SE") {
+                                $("#DDLEstado").append("<option value='SE Sergipe'>SE Sergipe</option>");
+                                $("#DDLArea").append("<option value='T-SE'>T-SE</option>");
+                                document.getElementById("txtSubarea").value = "0025 SE Sede";
+
+                                $("#DDLDdd").append("<option value=''>SELECIONE</option>");
+                                $("#DDLDdd").append("<option value='79'>79</option>");
+                            }
+                            else {
+                                document.getElementById("DDLEstado").options[0].selected = true;
+                            }
+
+
+                            $("#DDLFuncao").empty();
+
+                            if (Parceiros.Canal == "REVENDA") {
+                                $("#DDLFuncao").append("<option Selected='true' value='SELECIONE'>SELECIONE</option>");
+                                $("#DDLFuncao").append("<option value='ADMINISTRATIVO'>ADMINISTRATIVO</option>");
+                                $("#DDLFuncao").append("<option value='GERENTE DO PDV'>GERENTE DO PDV</option>");
+                                $("#DDLFuncao").append("<option value='SOCIO'>SOCIO</option>");
+                                $("#DDLFuncao").append("<option value='VENDEDOR'>VENDEDOR</option>");
+                                $("#DDLFuncao").append("<option value='CAIXA'>CAIXA</option>");
+                                $("#DDLFuncao").append("<option value='OUTRO'>OUTRO</option>");
+                            }
+                            else {
+                                $("#DDLFuncao").append("<option Selected='True' value='SELECIONE'>SELECIONE</option>");
+                                $("#DDLFuncao").append("<option value='ADMINISTRATIVO'>ADMINISTRATIVO</option>");
+                                $("#DDLFuncao").append("<option value='GERENTE DO PDV'>GERENTE DO PDV</option>");
+                                $("#DDLFuncao").append("<option value='SOCIO'>SOCIO</option>");
+                                $("#DDLFuncao").append("<option value='VENDEDOR'>VENDEDOR</option>");
+                                $("#DDLFuncao").append("<option value='OUTRO'>OUTRO</option>");
+                            }
+                        }
+
+                    });
+                },
+                error: function (ex) {
+                    $('#loading').hide();
+                    $('#txtLogin').val('');
+                    $('#txtNome').val('');
+                    $('#txtCPF').val('');
+                }
+            });
+        });
+
+        $("#txtDataNascimento").datepicker({
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
+            dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+        });
+    });
+
+</script>
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">Liberação de Acessos</h3>
+    </div>
+</div>
+
+<div class="panel-body">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+
+                <div class="form-group">
+
+                    @using (Ajax.BeginForm("CadastraTerceiros", "AcessoTerceiros", null, new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "feedback", HttpMethod = "Post", OnSuccess = "FuncSucesso", OnFailure = "FuncError" }, new { @id = "formID" }))
+                  {
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label>REDE:</label>
+                                @Html.DropDownListFor(x => x.Parceiro.Rede, new SelectList((System.Collections.IEnumerable)ViewData["REDE"]), "SELECIONE", new { @id = "DDLRede", @class = "form-control", style = "width: 100%" })
+                                @Html.ValidationMessageFor(x => x.Parceiro.Rede, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-6">
+                                <label>ADABAS:</label>
+                                @Html.DropDownListFor(x => x.Parceiro.Vendedor, new SelectList(string.Empty), "SELECIONE", new { @id = "DDLAdabas", @class = "form-control", style = "width: 30%" })
+                                @Html.ValidationMessageFor(x => x.Parceiro.Vendedor, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label>AÇÃO:</label>
+                                @Html.DropDownListFor(x => x.Acao, new SelectList(new List<string> { "1   INCLUSÃO", "2   ALTERAÇÃO" }), "SELECIONE", new { @id = "DDLAcao", @class = "form-control", style = "width: 100%" })
+                                @Html.ValidationMessageFor(x => x.Acao, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-10">
+                                <label>TIPO DE TERCEIRO:</label>
+                                @Html.DropDownListFor(x => x.TipoTerceiro, new SelectList(new List<string> { "T4 DEALERS" }), new { @id = "DDLTipoTerceiros", @class = "form-control", style = "width: 30%" })
+                                @Html.ValidationMessageFor(x => x.TipoTerceiro, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label>MATRÍCULA:</label>
+                                @Html.TextBoxFor(x => x.Matricula, new { @id = "txtMatricula", @class = "form-control", style = "width: 100%", placeholder = "MATRÍCULA" })
+                                @Html.ValidationMessageFor(x => x.Matricula, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-10">
+                                <label>SEXO:</label>
+                                @Html.DropDownListFor(x => x.Sexo, new SelectList(new List<string> { "1 MASCULINO", "2 FEMININO" }), "SELECIONE", new { @id = "DDLSexo", @class = "form-control", style = "width: 30%" })
+                                @Html.ValidationMessageFor(x => x.Sexo, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>PRIMEIRO NOME:</label>
+                                @Html.TextBoxFor(x => x.Nome, new { @id = "txtPrimeiroNome", @class = "form-control", style = "width: 100%", placeholder = "NOME" })
+                                @Html.ValidationMessageFor(x => x.Nome, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-9">
+                                <label>SOBRENOME:</label>
+                                @Html.TextBoxFor(x => x.Sobrenome, new { @id = "txtSobrenome", @class = "form-control", style = "width: 65%", placeholder = "SOBRENOME" })
+                                @Html.ValidationMessageFor(x => x.Sobrenome, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label>PERFIL:</label>
+                                @Html.DropDownListFor(x => x.Perfil, new SelectList(new List<string> { "GERENCIAL", "VENDEDOR" }), "SELECIONE", new { @id = "DDLAcao", @class = "form-control", style = "width: 100%" })
+                                @Html.ValidationMessageFor(x => x.Perfil, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-10">
+                                <label>FUNÇÃO:</label>
+                                @Html.DropDownListFor(x => x.Funcao, new SelectList(string.Empty), "SELECIONE", new { @id = "DDLFuncao", @class = "form-control", style = "width: 30%" })
+                                @Html.ValidationMessageFor(x => x.Funcao, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label>CPF: </label>
+                                @Html.TextBoxFor(x => x.Cpf, new { @id = "txtCPF", @onkeypress = "return FormataCpf(this, event)", placeholder = "CPF", @maxlength = "14", @class = "form-control", style = "width: 100%" })
+                                @Html.ValidationMessageFor(x => x.Cpf, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>RG: </label>
+                                @Html.TextBoxFor(x => x.Rg, new { @id = "txtRG", placeholder = "RG", @maxlength = "14", @class = "form-control", style = "width: 100%" })
+                                @Html.ValidationMessageFor(x => x.Rg, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-8">
+                                <label>ÓRGÃO EMISSOR: </label>
+                                @Html.TextBoxFor(x => x.OrgaoEmissor, new { @id = "txtOrgaoEmissor", placeholder = "ÓRGÃO EMISSOR", @maxlength = "7", @class = "form-control", style = "width: 18%" })
+                                @Html.ValidationMessageFor(x => x.OrgaoEmissor, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label>DATA DE NASCIMENTO: </label>
+                                @Html.TextBoxFor(x => x.DataNascimento, new { @id = "txtDataNascimento", @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", placeholder = @DateTime.Now.ToString("dd/MM/yyyy"), @class = "form-control", style = "width: 10%" })
+                                @Html.ValidationMessageFor(x => x.DataNascimento, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label>INFORMAÇÕES DO DEALERS</label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-7">
+                                <label>RUA: </label>
+                                @Html.TextBoxFor(x => x.Parceiro.Endereco, new { @id = "txtRua", placeholder = "RUA", @readonly = "readonly", @class = "form-control", style = "width: 100%" })
+                                @Html.ValidationMessageFor(x => x.Parceiro.Endereco, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-5">
+                                <label>Nº: </label>
+                                @Html.TextBoxFor(x => x.Parceiro.Numero, new { @id = "txtNumero", placeholder = "Nº", @readonly = "readonly", @class = "form-control", style = "width: 30%" })
+                                @Html.ValidationMessageFor(x => x.Parceiro.Numero, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>CIDADE: </label>
+                                @Html.TextBoxFor(x => x.Parceiro.Cidade, new { @id = "txtCidade", placeholder = "CIDADE", @readonly = "readonly", @class = "form-control", style = "width: 100%" })
+                                @Html.ValidationMessageFor(x => x.Parceiro.Cidade, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>BAIRRO: </label>
+                                @Html.TextBoxFor(x => x.Parceiro.Bairro, new { @id = "txtBairro", placeholder = "BAIRRO", @readonly = "readonly", @class = "form-control", style = "width: 100%" })
+                                @Html.ValidationMessageFor(x => x.Parceiro.Bairro, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-6">
+                                <label>CEP: </label>
+                                @Html.TextBoxFor(x => x.Parceiro.Cep, new { @id = "txtCEP", placeholder = "CEP", @OnKeyPress = "formatarMascara('#####-###', this);", @class = "form-control", @readonly = "readonly", @maxlength = "9", style = "width: 30%" })
+                                @Html.ValidationMessageFor(x => x.Parceiro.Cep, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label>ESTADO:</label>
+                                @Html.DropDownListFor(x => x.Estado, new SelectList(new List<string> { "AL Alagoas", "BA Bahia", "CE Ceará", "PB Paraíba", "PE Pernambuco", "PI Piauí", "RN Rio Grande do Norte", "SE Sergipe" }), "SELECIONE", new { @id = "DDLEstado", @readonly = "readonly", @enable = "false", @class = "form-control", style = "width: 100%" })
+                                @Html.ValidationMessageFor(x => x.Estado, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-10">
+                                <label>E-MAIL DEALER: </label>
+                                @Html.TextBoxFor(x => x.Parceiro.EmailComercial, new { @id = "txtEmailPessoal", placeholder = "E-MAIL DEALER", @readonly = "readonly", @class = "form-control", style = "width: 50%" })
+                                @Html.ValidationMessageFor(x => x.Parceiro.EmailComercial, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label>TELEFONE: </label>
+                                @Html.TextBoxFor(x => x.Parceiro.Telefone, new { @id = "txtTelefone", placeholder = "TELEFONE", @OnKeyPress = "formatarMascara('## ####-####', this);", @maxlength = "12", @class = "form-control", style = "width: 100%" })
+                                @Html.ValidationMessageFor(x => x.Parceiro.Telefone, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-10">
+                                <label>CELULAR: </label>
+                                @Html.TextBoxFor(x => x.Parceiro.Celular, new { @id = "txtCelular", placeholder = "CELULAR", @OnKeyPress = "formatarMascara('## # ####-####', this);", @maxlength = "14", @class = "form-control", style = "width: 20%" })
+                                @Html.ValidationMessageFor(x => x.Parceiro.Celular, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>CNPJ: </label>
+                                @Html.TextBoxFor(x => x.Parceiro.Cnpj, new { @id = "txtCnpj", placeholder = "CNPJ", @readonly = "readonly", @OnKeyPress = "return FormataCnpj(this, event);", @maxlength = "18", @class = "form-control", style = "width: 100%" })
+                                @Html.ValidationMessageFor(x => x.Parceiro.Cnpj, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-9">
+                                <label>NOME DO CONTATO: </label>
+                                @Html.TextBoxFor(x => x.Parceiro.Contato, new { @id = "txtNomeContato", @readonly = "readonly", placeholder = "NOME DO CONTATO", @class = "form-control", style = "width: 70%" })
+                                @Html.ValidationMessageFor(x => x.Parceiro.Contato, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>SUBGRUPO DEALER:</label>
+                                @Html.DropDownListFor(x => x.SubGrupo, new SelectList(new List<string> { "2 REVENDA" }), new { @id = "DDLSubgrupo", @readonly = "readonly", @class = "form-control", style = "width: 100%" })
+                                @Html.ValidationMessageFor(x => x.SubGrupo, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-9">
+                                <label>ATIVIDADE: </label>
+                                <div class="form-inline">
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(x => x.DtAtividadeIni, new { @id = "txtDataIni", @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @readonly = "readonly", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                                        <br />
+                                        @Html.ValidationMessageFor(x => x.DtAtividadeIni, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>a</label>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(x => x.DtAtividadeFim, new { @id = "txtDataFim", @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @readonly = "readonly", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                                        <br />
+                                        @Html.ValidationMessageFor(x => x.DtAtividadeFim, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label>ÁREA:</label>
+                                @Html.DropDownListFor(x => x.Area, new SelectList(new List<string> { "T-AL", "T-BA", "T-CE", "T-PB", "T-PE", "T-PI", "T-RN", "T-SE" }), new { @id = "DDLArea", @readonly = "readonly", @class = "form-control", style = "width: 100%" })
+                                @Html.ValidationMessageFor(x => x.Area, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>SUBÁREA: </label>
+                                @Html.TextBoxFor(x => x.SubArea, new { @id = "txtSubarea", placeholder = "SUBÁREA", @readonly = "readonly", @class = "form-control", style = "width: 100%" })
+                                @Html.ValidationMessageFor(x => x.SubArea, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-8">
+                                <label>DDD:</label>
+                                @Html.DropDownListFor(x => x.Ddd, new SelectList(string.Empty), "SELECIONE", new { @id = "DDLDdd", @class = "form-control", style = "width: 18%" })
+                                @Html.ValidationMessageFor(x => x.Ddd, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <input id="btnSolicitar" class="btn btn-primary" type="submit" value="Solicitar" />
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

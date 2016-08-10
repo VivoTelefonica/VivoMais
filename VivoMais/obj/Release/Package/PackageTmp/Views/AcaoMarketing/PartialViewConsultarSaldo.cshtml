@@ -1,0 +1,52 @@
+﻿@model VivoMais.Repositorio.Entidades.SaldoRede
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#example').dataTable({
+            bHeader: true,
+        });
+    });
+</script>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="dataTable_wrapper">
+            <table class="table table-striped table-bordered" id="example">
+                <thead>
+                    <tr>
+                        <th style="width:50%">Rede</th>
+                        <th>R$ Disponibilizado</th>
+                        <th>R$ Usado</th>
+                        <th>R$ Saldo</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model != null)
+                    {
+                        <tr>
+                            <td>@Model.Rede</td>
+
+                            @if (Model.Verba == "VERBA COOPERADA")
+                            {
+                                <td>@Model.SaldoVpc</td>
+                                <td>@Model.Usado</td>
+                                <td>@Model.Saldo</td>
+                            }
+                            else
+                            {
+                                <td>@Model.SaldoVio</td>
+                                <td>@Model.Usado</td>
+                                <td>@Model.Saldo</td>
+                            }
+
+
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

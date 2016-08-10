@@ -1,0 +1,6 @@
+D:\OneDrive - Telefonica\VivoMais\VivoMais.Repositorio\bin\VivoMais.Repositorio.dll.config
+D:\OneDrive - Telefonica\VivoMais\VivoMais.Repositorio\bin\VivoMais.Repositorio.dll
+D:\OneDrive - Telefonica\VivoMais\VivoMais.Repositorio\bin\VivoMais.Repositorio.pdb
+D:\OneDrive - Telefonica\VivoMais\VivoMais.Repositorio\obj\Release\VivoMais.Repositorio.dll
+D:\OneDrive - Telefonica\VivoMais\VivoMais.Repositorio\obj\Release\VivoMais.Repositorio.pdb
+D:\OneDrive - Telefonica\VivoMais\VivoMais.Repositorio\obj\Release\VivoMais.Repositorio.csprojResolveAssemblyReference.cache

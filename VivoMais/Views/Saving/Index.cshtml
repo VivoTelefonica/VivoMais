@@ -1,0 +1,261 @@
+﻿@using System.Collections
+@model VivoMais.Models.SavingViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/_LayoutPage.cshtml";
+}
+
+<script type="text/javascript" src="~/Scripts/jquery-1.8.0.js"></script>
+<script type="text/javascript" src="~/Scripts/ajax.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#Arquivo").hide();
+
+        $("#btnSolicitar").click(
+            function () {
+
+            }
+        );
+
+        $("#DDLDdd").change(function () {
+            $("#DDLRede").empty();
+
+            $("#loading").show();
+            $.ajax({
+                type: 'POST',
+                url: '/Saving/ObterParceirosRedePorDDDeCanalRecarga',
+                dataType: 'json',
+                data: { Ddd: $("#DDLDdd").val() },
+
+                success: function (Parceiro) {
+                    $("#DDLRede").append('<option value="0">SELECIONE</option>');
+                    $.each(Parceiro, function (i, Parceiro) {
+                        $("#DDLRede").append('<option>' + Parceiro + '</option>');
+                       
+                    });
+                    $('#loading').hide();
+                },
+                error: function (ex) {
+                    alert('Ocorreu um erro ao tentar processar sua solicitação.' + ex);
+                }
+            });
+        });
+
+        $("#DDLRede").change(function () {
+            $("#txtSaldoFaturado").empty();
+
+            $("#loading").show();
+            $.ajax({
+                type: 'POST',
+                url: '/Saving/retornaFaturamentoChipSaving',
+                dataType: 'json',
+                data: { Rede: $("#DDLRede").val() },
+
+                success: function (Saving) {
+                    $("#txtSaldoFaturado").val(Saving);
+                    $('#loading').hide();
+
+                },
+                error: function (ex) {
+                    alert('Ocorreu um erro ao tentar processar sua solicitação.' + ex);
+                }
+            });
+        });
+
+        $("#DDLTipoAcao").change(function () {
+            if (this.value == "CAMPANHA DE VENDAS") {
+                $("#DDLOpcaoAcao").empty();
+                $("#DDLOpcaoAcao").append('<option> SELECIONE </option>');
+                $("#DDLOpcaoAcao").append('<option> BRINDES </option>');
+                $("#DDLOpcaoAcao").append('<option> PREMIAÇÃO EM $ </option>');
+                $("#DDLOpcaoAcao").append('<option> PREMIOS > 500 </option>');
+                $("#DDLOpcaoAcao").append('<option> CAFÉ/JANTAR/FESTA </option>');
+            }
+            else if (this.value == "ENVELOPAMENTO") {
+                $("#DDLOpcaoAcao").empty();
+                $("#DDLOpcaoAcao").append('<option> SELECIONE </option>');
+                $("#DDLOpcaoAcao").append('<option> TOTAL </option>');
+                $("#DDLOpcaoAcao").append('<option> PARCIAL </option>');
+                $("#DDLOpcaoAcao").append('<option> FACHADA </option>');
+                $("#DDLOpcaoAcao").append('<option> CARRO </option>');
+            }
+            else if (this.value == "MATERIAL DIVULGAÇÃO") {
+                $("#DDLOpcaoAcao").empty();
+                $("#DDLOpcaoAcao").append('<option> SELECIONE </option>');
+                $("#DDLOpcaoAcao").append('<option> PANFLETO </option>');
+                $("#DDLOpcaoAcao").append('<option> FAIXA </option>');
+                $("#DDLOpcaoAcao").append('<option> CARTAZ </option>');
+                $("#DDLOpcaoAcao").append('<option> ADESIVO </option>');
+                $("#DDLOpcaoAcao").append('<option> BANNER </option>');
+                $("#DDLOpcaoAcao").append('<option> CAMISA </option>');
+                $("#DDLOpcaoAcao").append('<option> COLETE </option>');
+                $("#DDLOpcaoAcao").append('<option> BIKE DOOR </option>');
+            }
+            else if (this.value == "VENDA") {
+                $("#DDLOpcaoAcao").empty();
+                $("#DDLOpcaoAcao").append('<option> SELECIONE </option>');
+                $("#DDLOpcaoAcao").append('<option> PROMOTOR </option>');
+                $("#DDLOpcaoAcao").append('<option> LOCAÇÃO DE ESPAÇO </option>');
+                $("#DDLOpcaoAcao").append('<option> BALCÃO </option>');
+                $("#DDLOpcaoAcao").append('<option> CAIXA DE SOM </option>');
+                $("#DDLOpcaoAcao").append('<option> INFLÁVEL </option>');
+            }
+
+        });
+
+        $("#txtPeriodoInicial").datepicker({
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
+            dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+        });
+
+        $("#txtPeriodoFinal").datepicker({
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
+            dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+        });
+
+
+    });
+</script>
+
+@if (null != ViewBag.result)
+{
+    <script type="text/javascript">
+        alert(unescape('@ViewBag.result'));
+    </script>
+}
+
+<div class="panel-body">
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">Saving</h3>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+
+                @using (Html.BeginForm("CadastrarSaving", "Saving", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="row" id="MESACAO">
+                        <div class="col-sm-12" id="MESACAO">
+                            <label>MES DA AÇÃO:</label>
+                            @Html.DropDownListFor(x => x.saving.MesAcao, new SelectList(new List<string> { @DateTime.Now.ToString("MM/yyyy") }), new { @id = "txtMesAno", @class = "form-control", style = "width: 20%" })
+                            @Html.ValidationMessageFor(x => x.saving.MesAcao, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label>DDD:</label>
+                            @Html.DropDownListFor(x => x.saving.Parceiro.Ddd, new SelectList((IEnumerable)ViewData["DDD"]), "SELECIONE", new { @id = "DDLDdd", @class = "form-control", style = "width: 100%" })
+                            @Html.ValidationMessageFor(x => x.saving.Parceiro.Ddd, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-sm-10">
+                            <label>REDE:</label>
+                            @Html.DropDownListFor(x => x.saving.Parceiro.Rede, new SelectList(string.Empty), "SELECIONE", new { @id = "DDLRede", @class = "form-control", style = "width: 60%" })
+                            @Html.ValidationMessageFor(x => x.saving.Parceiro.Rede, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>SALDO FATURADO:</label>
+                            @Html.TextBoxFor(x => x.saving.SaldoFaturado, new { @id = "txtSaldoFaturado", @readonly = "readonly", @class = "form-control", style = "width: 15%" })
+                            @Html.ValidationMessageFor(x => x.saving.SaldoFaturado, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>TIPO DE AÇÃO:</label>
+                            @Html.DropDownListFor(x => x.saving.TipoAcao, new List<SelectListItem>
+                               {
+                                   new SelectListItem{ Text="CAMPANHA DE VENDAS", Value="CAMPANHA DE VENDAS" },
+                                   new SelectListItem{ Text="ENVELOPAMENTO", Value="ENVELOPAMENTO" },
+                                   new SelectListItem{ Text="MATERIAL DIVULGAÇÃO", Value="MATERIAL DIVULGAÇÃO" },
+                                   new SelectListItem{ Text="VENDA", Value="VENDA" },
+                               }, "SELECIONE", new { @id = "DDLTipoAcao", @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.saving.TipoAcao, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-sm-7">
+                            <label>OPCAO DE AÇÃO:</label>
+                            @Html.DropDownListFor(x => x.saving.OpcaoAcao, new SelectList(string.Empty), "SELECIONE", new { @id = "DDLOpcaoAcao", @class = "form-control", style = "width: 70%" })
+                            @Html.ValidationMessageFor(x => x.saving.OpcaoAcao, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>OFERTA:</label>
+                            @Html.TextBoxFor(x => x.saving.Oferta, new { @id = "txtOferta", @class = "form-control", style = "width: 25%" })
+                            @Html.ValidationMessageFor(x => x.saving.Oferta, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>PERÍODO:</label>
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    @Html.TextBoxFor(x => x.saving.PeriodoInicial, new { @id = "txtPeriodoInicial", @class = "form-control" })
+                                    @Html.ValidationMessageFor(x => x.saving.PeriodoInicial, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    <label>a</label>
+                                </div>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(x => x.saving.PeriodoFinal, new { @id = "txtPeriodoFinal", @class = "form-control"})
+                                    @Html.ValidationMessageFor(x => x.saving.PeriodoFinal, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>VALOR DA AÇÃO:</label>
+                            @Html.TextBoxFor(x => x.saving.ValorAcao, new { @id = "txtValorAcao", @class = "form-control", style = "width: 15%", @onkeypress = "return formatoNumero(event)", @onKeydown = "FormataNumero(this,20,event,2)" })
+                            @Html.ValidationMessageFor(x => x.saving.ValorAcao, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>DESCRIÇÃO:</label>
+                            @Html.TextAreaFor(x => x.saving.Descricao, new { @id = "txtDescricao", @class = "form-control", style = "width: 100% , height: 50%", placeholder = "Descrição" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>ARQUIVO:</label>
+                            <input type="file" class="form-control" name="ComprovanteAcao" style="width:40%" />
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input id="btnSolicitar" class="btn btn-primary" type="submit" value="Solicitar" style="width:150px" />
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

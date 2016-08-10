@@ -1,0 +1,77 @@
+﻿@model VivoMais.Repositorio.Entidades.Acesso
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/_Layout.cshtml";
+}
+
+
+@* Javascript *@
+<script type="text/javascript" src="~/Acesso/Js/jquery-2.2.1.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<style>
+    #login{
+	position: relative;
+	top: 0px;
+	width: 450px;	
+    height: 70%;	
+    min-width: 100%;
+    min-height: 280px;
+	background: rgb(247, 247, 247);
+	border: 1px solid rgba(147, 184, 189,0.8);
+	-webkit-box-shadow: 0pt 2px 5px rgba(105, 108, 109,  0.7),	0px 0px 8px 5px rgba(208, 223, 226, 0.4) inset;
+	   -moz-box-shadow: 0pt 2px 5px rgba(105, 108, 109,  0.7),	0px 0px 8px 5px rgba(208, 223, 226, 0.4) inset;
+	        box-shadow: 0pt 2px 5px rgba(105, 108, 109,  0.7),	0px 0px 8px 5px rgba(208, 223, 226, 0.4) inset;
+	-webkit-box-shadow: 5px;
+	-moz-border-radius: 5px;
+		 border-radius: 5px;
+}
+</style>
+
+
+<div>
+    <a class="hiddenanchor" id="signup"></a>
+    <a class="hiddenanchor" id="signin"></a>
+
+    <div class="login_wrapper">
+        <div class="animate form login_form">
+            <section class="login_content">
+                @using (Html.BeginForm("Logar", "Acesso", FormMethod.Post, new { id = "login" }))
+                {
+                    <h1>VIVO MAIS</h1>
+
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.Login, new { @class = "form-control", placeholder = "Login", style = "width: 92%;margin-left: 15px" })@Html.ValidationMessageFor(m => m.Login, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(m => m.Login, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.PasswordFor(m => m.Senha, new { @class = "form-control", placeholder = "Senha", style = "width: 92%;margin-left: 15px" })
+                        @Html.ValidationMessageFor(m => m.Senha, "", new { @class = "text-danger" })
+                    </div>
+
+
+                    <div>
+                        <input class="btn btn-default submit" style="width: 92%; margin-left: 15px;" value="Login" type="submit" />
+                        <a class="reset_pass" href="/CadastroUsuario/Index">Esqueci minha senha</a>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <div class="separator">
+                        <p class="change_link">
+                            Novo no portal?
+                            <a href="/CadastroUsuario/Index" class="to_register">Crie seu Login</a>
+                         </p>
+
+                        <div class="clearfix"></div>
+                        <br />
+                    </div>
+
+                } 
+            </section>
+        </div>
+    </div>
+</div>
+

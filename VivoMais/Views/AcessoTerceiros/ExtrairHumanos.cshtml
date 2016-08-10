@@ -1,0 +1,128 @@
+﻿@model VivoMais.Models.AcessoTerceiroViewModel
+@{
+    ViewBag.Title = "ExtrairHumanos";
+    if (Session["TipoMenu"].ToString() != "")
+    {
+        Layout = Session["TipoMenu"].ToString();
+    }
+    else
+    {
+        Session.Clear();
+        Session.Abandon();
+        FormsAuthentication.SignOut();
+        Response.Redirect("/Acesso/Index");
+    }
+}
+
+@* Javascript *@
+<script type="text/javascript" src="~/Acesso/Js/jquery-2.2.1.js"></script>
+<script type="text/javascript" src="~/Scripts/ajax.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<script type="text/javascript">
+
+    function DownloadTerceiros(xUf, xGc) {
+        $("#loading").show();
+        $.ajax({
+            type: 'POST',
+            url: '/AcessoTerceiros/ExtraiPlanilhaTerceiros',
+            data: { Uf: xUf, Gc: xGc, DataIni: $("#txtDataIni").val(), DataFim: $("#txtDataFim").val() },
+            success: function (returnValue) {
+                $('#loading').hide();
+                window.location.href = '/AcaoMarketing/Download?Tipo=SolicitacaoAcessosExterno.xls&Caminho=C:\\VivoSimArquivos\\SolicitacaoAcessosExterno.xls'
+                //window.location.href = '/AcessoTerceiros/ExtraiPlanilhaTerceiros';//?file=' + returnValue;
+            },
+            failure: function (returnValue) {
+                alert("Ocorreu um problema ao tentar extrair o Excel. Tente novamente.");
+            }
+        });
+    }
+
+    $(document).ready(function () {
+
+
+        $("#txtDataIni").datepicker({
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
+            dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+        });
+
+        $("#txtDataFim").datepicker({
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
+            dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+        });
+    });
+
+</script>
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">Extrair Acessos</h3>
+    </div>
+</div>
+<div class="panel-body">
+    <div class="row">
+        <div class="col-lg-6">
+
+            <div class="form-group">
+
+                @using (Ajax.BeginForm("RetornarAcessosEmAberto", "AcessoTerceiros", new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "dvResultado", }, new { @id = "formID" }))
+                {
+                    <div class="row">
+                        <label>GERENTE DE CONTAS:</label>
+                        @Html.DropDownListFor(x => x.Parceiro.Gestor, new SelectList((System.Collections.IEnumerable)ViewData["GC"]), "SELECIONE", new { @id = "DDLGestor", @class = "form-control", style = "width: 100%" })
+                        @Html.ValidationMessageFor(x => x.Parceiro.Gestor, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="row" style="margin-top:10px">
+                        <label>DATA DA SOLICITAÇÃO:</label>
+                    </div>
+
+                    <div class="row">
+                        <div>
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    @Html.TextBoxFor(x => x.DataIni, new { @id = "txtDataIni", @name = "txtDataIni", @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", placeholder = @DateTime.Now.ToString("dd/MM/yyyy"), @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                                    <br />
+                                    @Html.ValidationMessageFor(x => x.DataIni, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    <label>a</label>
+                                </div>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(x => x.DataFim, new { @id = "txtDataFim", @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", placeholder = @DateTime.Now.ToString("dd/MM/yyyy"), @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                                    <br />
+                                    @Html.ValidationMessageFor(x => x.DataFim, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row" style="margin-top:10px">
+                        <input id="btnSolicitar" class="btn btn-primary" style="width:150px" type="submit" value="Solicitar" />
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="dvResultado">
+                @{
+                    Html.RenderPartial("PartialViewExtrairHumanos");
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

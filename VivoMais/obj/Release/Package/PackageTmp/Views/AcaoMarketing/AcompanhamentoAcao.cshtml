@@ -1,0 +1,149 @@
+﻿@using System.Collections
+@model VivoMais.Models.AcaoMarketingViewModel
+@{
+    ViewBag.Title = "AcompanhamentoAcao";
+    if (Session["TipoMenu"].ToString() != "")
+    {
+        Layout = Session["TipoMenu"].ToString();
+    }
+    else
+    {
+        Session.Clear();
+        Session.Abandon();
+        FormsAuthentication.SignOut();
+        Response.Redirect("/Acesso/Index");
+    }
+}
+
+@* Javascript *@
+<script type="text/javascript" src="~/Scripts/jquery-1.8.0.js"></script>
+<script type="text/javascript" src="~/Scripts/ajax.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<script type="text/javascript">
+
+    function ObterAcompanhamento(xProtocolo) {
+
+        $.ajax({
+            url: '/AcaoMarketing/ObterAcaoAcompanhamentoProtocolo/' + xProtocolo,
+            type: 'POST',
+            dataType: 'html',
+            cache: false,
+            success: function (response) {
+                $('#DivPartialViewAtualizacao').html(response);
+            },
+            failure: function (response) {
+                alert("error!");
+            },
+            error: function (response) {
+                alert("error!");
+            }
+        });
+    }
+
+    
+
+    $(document).ready(function () {
+
+        $("#DDLDdd").change(function () {
+            $("#DDLRede").empty();
+
+            $("#loading").show();
+            $.ajax({
+                type: 'POST',
+                url: '/Parceiro/ObterParceirosRede',
+                dataType: 'json',
+                data: { Ddd: $("#DDLDdd").val() },
+
+                success: function (REDE) {
+                    $("#DDLRede").append("<option value=''>SELECIONE</option>");
+                    $.each(REDE, function (i, REDE) {
+                        $("#DDLRede").append('<option>' + REDE.Rede + '</option>');
+                        $('#loading').hide();
+                    });
+                    $("#DDLRede").append('<option>TODOS</option>');
+                },
+                error: function (ex) {
+                    alert('Ocorreu um erro ao tentar processar sua solicitação.' + ex);
+                }
+            });
+        });
+
+    });
+
+</script>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">Acompanhamento das Ações</h3>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document" style="width:70%">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div id="DivPartialViewAtualizacao">
+                        @{
+                            Html.RenderPartial("PartialViewAtualizarAcompanhamento");
+                         }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+
+                    @using (Ajax.BeginForm("BuscarAcompanhamento", "AcaoMarketing", new AjaxOptions
+                              {
+                                  HttpMethod = "Post",
+                                  UpdateTargetId = "dvResultado",
+                              }, new { @id = "formID" }))
+                {
+
+                    <div class="row">
+                            <div class="col-sm-2">
+                                <label>DDD:</label>
+                                @Html.DropDownListFor(x => x.AcaoMarketing.Parceiro.Ddd, new SelectList((IEnumerable)ViewData["DDD"]), "SELECIONE", new { @id = "DDLDdd", @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.AcaoMarketing.Parceiro.Ddd, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-10">
+                                <label>REDE:</label>
+                                @Html.DropDownListFor(x => x.AcaoMarketing.Parceiro.Rede, new SelectList(string.Empty), new { @id = "DDLRede", @class = "form-control", style = "width: 60%" })
+                                @Html.ValidationMessageFor(x => x.AcaoMarketing.Parceiro.Rede, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                    <div class="row">
+                            <div class="col-sm-12">
+                                <label>MÊS DA AÇÃO:</label>
+                                @Html.DropDownListFor(x => x.AcaoMarketing.MesAcao, new SelectList((IEnumerable)ViewData["MESES"]), "SELECIONE", new { @id = "DDLMesAcaoFiltro", @class = "form-control", style = "width: 25%" })
+                                @Html.ValidationMessageFor(x => x.AcaoMarketing.OrigemVerba, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                    <div class="row">
+                            <div class="col-sm-12">
+                                <input id="btnConsultar" class="btn btn-primary" type="submit" style="width:150px" value="Buscar" />
+                            </div>
+                        </div>
+                }
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="dvResultado">
+                    @{
+                        Html.RenderPartial("PartialViewBuscarAcompanhamento");
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+

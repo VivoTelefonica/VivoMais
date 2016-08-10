@@ -1,0 +1,153 @@
+﻿@model VivoMais.Models.PrincipalViewModel
+@{
+    ViewBag.Title = "AcaoVio";
+    if (Session["TipoMenu"].ToString() != "")
+    {
+        Layout = Session["TipoMenu"].ToString();
+    }
+    else
+    {
+        Session.Clear();
+        Session.Abandon();
+        FormsAuthentication.SignOut();
+        Response.Redirect("/Acesso/Index");
+    }
+}
+
+@* Javascript *@
+<script type="text/javascript" src="~/Scripts/jquery-1.8.0.js"></script>
+<script type="text/javascript" src="~/Scripts/ajax.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#TableToken').dataTable({
+            "bPaginate": false
+        });
+
+    });
+
+    function ObterAcessoMobileToken() {
+
+        $.ajax({
+            url: '/AcessoTerceiros/ObterEsperandoMobileToken',
+            type: 'POST',
+            dataType: 'html',
+            cache: false,
+            success: function (response) {
+                $('#DivMobileToken').html(response);
+            },
+            failure: function (response) {
+                alert("Ocorreu um erro ao tentar processar sua solicitação!");
+            }
+        });
+    }
+
+    function ObterConsultarAcesso() {
+
+        $.ajax({
+            url: '/AcessoTerceiros/ObterLoginSenha',
+            type: 'POST',
+            dataType: 'html',
+            cache: false,
+            success: function (response) {
+                $('#DivConsultarAcesso').html(response);
+            },
+            failure: function (response) {
+                alert("Ocorreu um erro ao tentar processar sua solicitação!");
+            }
+        });
+    }
+
+</script>
+
+<style>
+
+#DivMobileToken a:hover{
+    text-decoration: underline;
+}
+
+
+</style>
+
+<div class="modal fade" id="myModalMobileToken" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="width:70%">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div id="DivMobileToken">
+                    @{
+                        Html.RenderPartial("PartialViewMobileToken");
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalConsultarAcessos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="width:70%">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div id="DivConsultarAcesso">
+                    @{
+                        Html.RenderPartial("PartialViewConsultarAcessos");
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="">
+        <div class="row top_tiles">
+            <div onclick="ObterAcessoMobileToken()" id="DivMobileToken" class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12" data-toggle="modal" data-target="#myModalMobileToken">
+                <div class="tile-stats">
+                    <div class="icon"><i class="fa fa-check-square-o"></i></div>
+                    <a><div class="count">@Model.Acesso.Count</div></a>
+                    <br />
+
+                    @if (Model.Acesso.Count > 0)
+                    {
+                        <a><h3>Aguardando você!</h3></a>
+                        <a><p>Sinalize o cadastro no Mobile Token.</p></a>                    }
+                </div>
+            </div>
+            <div onclick="ObterConsultarAcesso()" id="DivConsultarAcesso" class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12" data-toggle="modal" data-target="#myModalConsultarAcessos">
+                <div class="tile-stats">
+                    <div class="icon"><i class="fa fa-comments-o"></i></div>
+                    <div class="count">@Model.SenhaLiberada.Count</div>
+                    <br />
+                    @if (Model.SenhaLiberada.Count > 0)
+                    {
+                        <a><h3>Acessos Liberados.</h3></a>
+                        <a><p>Clique Aqui!</p></a>
+                    }
+
+                </div>
+            </div>
+
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="tile-stats">
+                    <div class="icon"><i class="fa fa-sort-amount-desc"></i></div>
+                    <div class="count">179</div>
+                    <h3>New Sign ups</h3>
+                    <p>Lorem ipsum psdea itgum rixt.</p>
+                </div>
+            </div>
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="tile-stats">
+                    <div class="icon"><i class="fa fa-check-square-o"></i></div>
+                    <div class="count">179</div>
+                    <h3>New Sign ups</h3>
+                    <p>Lorem ipsum psdea itgum rixt.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+

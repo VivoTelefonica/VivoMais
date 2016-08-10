@@ -1,0 +1,170 @@
+﻿@model VivoMais.Models.AcaoMarketingViewModel
+
+<script type="text/javascript" src="~/Scripts/ajax.js"></script>
+<script type="text/javascript">
+
+    function FuncSucesso() {
+        alert('Ação atualizada com Sucesso!');
+    }
+
+    function FuncError() {
+        alert('Ocorreu um erro ao tentar processar sua solicitação!');
+    }
+
+</script>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">VIVO MAIS+</h4>
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+
+        @using (Ajax.BeginForm("AtualizarAcompanhamento", "AcaoMarketing", null, new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "feedback", HttpMethod = "Post", OnSuccess = "FuncSucesso", OnFailure = "FuncError" }, new { @id = "formID" }))
+        {
+
+            <div class="row">
+                    <div class="col-sm-2">
+                        <label>UF:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Parceiro.Uf, new { @id = "txtUf", @class = "form-control", @readonly = "readonly", @enable = "false" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Parceiro.Uf, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-10">
+                        <label>ADABAS:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Parceiro.Vendedor, new { @id = "txtAdabas", @class = "form-control", style = "width: 15%", @readonly = "readonly", @enable = "false" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Parceiro.Vendedor, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            <div class="row">
+                    <div class="col-sm-2">
+                        <label>CANAL:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Parceiro.Canal, new { @id = "txtCanal", @class = "form-control", @readonly = "readonly", @enable = "false" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Parceiro.Canal, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-10">
+                        <label>RAZÃO SOCIAL:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Parceiro.RazaoSocial, new { @id = "txtRazaoSocial", @class = "form-control", @readonly = "readonly", @enable = "false" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Parceiro.RazaoSocial, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            <div class="row">
+                    <div class="col-sm-2">
+                        <label>R$ TOTAL:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.ValorTotalVivo, new { @id = "txtTotal", @class = "form-control", @readonly = "readonly", @enable = "false" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.ValorTotalVivo, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-2">
+                        <label>COMPETENCIA:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.MesAcao, new { @id = "txtMesAcao", @class = "form-control", @readonly = "readonly", @enable = "false" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.MesAcao, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-8">
+                        <label>DOC SAP:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Acompanhamento.DocSAP, new { @id = "txtDocSap", @class = "form-control", style = "width: 20%", @readonly = "readonly", @enable = "false" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Acompanhamento.DocSAP, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            <div class="row">
+                    <div class="col-sm-2">
+                        <label>PROTOCOLO:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Acompanhamento.NumeroProtocolo, new { @id = "txtNumeroProtocolo", @class = "form-control", @readonly = "readonly", @enable = "false" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Acompanhamento.NumeroProtocolo, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-2">
+                        <label>DATA DO PROTOCOLO:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Acompanhamento.DataSolicitacaoProtocolo, new { @id = "txtDataSolicitacaoProtocolo", @class = "form-control", @readonly = "readonly", @enable = "false" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Acompanhamento.DataSolicitacaoProtocolo, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-8">
+                        <label>VENCIMENTO DO PROTOCOLO:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Acompanhamento.DataVencimentoProtocolo, new { @id = "txtDataVencimentoProtocolo", @class = "form-control", style = "width: 20%", @readonly = "readonly", @enable = "false" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Acompanhamento.DataVencimentoProtocolo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <label>REL:</label>
+                    @Html.TextBoxFor(x => x.AcaoMarketing.Acompanhamento.Rel, new { @id = "txtREL", @class = "form-control", @readonly = "readonly", @enable = "false" })
+                    @Html.ValidationMessageFor(x => x.AcaoMarketing.Acompanhamento.Rel, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-2">
+                    <label>DATA DA REL:</label>
+                    @Html.TextBoxFor(x => x.AcaoMarketing.Acompanhamento.DataSolicitacaoRel, new { @id = "txtDataSolicitacaoRel", @class = "form-control", @readonly = "readonly", @enable = "false" })
+                    @Html.ValidationMessageFor(x => x.AcaoMarketing.Acompanhamento.DataSolicitacaoRel, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-8">
+                    <label>VENCIMENTO DA REL:</label>
+                    @Html.TextBoxFor(x => x.AcaoMarketing.Acompanhamento.DataVencimentoRel, new { @id = "txtDataVencimentoRel", @class = "form-control", style = "width: 20%", @readonly = "readonly", @enable = "false" })
+                    @Html.ValidationMessageFor(x => x.AcaoMarketing.Acompanhamento.DataVencimentoRel, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="row">
+                    <div class="col-sm-3">
+                        <label>ENVIO MKT TERRITORIAL:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Acompanhamento.EnviadoMarketingTerritorial, new { @id = "txtEnviadoMarketingTerritorial", @class = "form-control", @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Acompanhamento.EnviadoMarketingTerritorial, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-9">
+                        <label>DATA SOLICITAÇÃO REL:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Acompanhamento.SolicitacaoREL, new { @id = "txtSolicitacaoREL", @class = "form-control", style = "width: 20%", @readonly = "readonly", @enable = "false", @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Acompanhamento.SolicitacaoREL, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            <div class="row">
+                    <div class="col-sm-2">
+                        <label>ENVIO MKT REGIONAL:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Acompanhamento.EnviadoMarketingRegional, new { @id = "txtEnviadoMarketingRegional", @class = "form-control", @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Acompanhamento.EnviadoMarketingRegional, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-10">
+                        <label>ENVIADO PARA MIDIA:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Acompanhamento.EnviadoMidia, new { @id = "txtEnviadoMidia", @class = "form-control", style = "width: 20%", @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Acompanhamento.EnviadoMidia, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            <div class="row">
+                    <div class="col-sm-2">
+                        <label>ENVIO AUDITORIA:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Acompanhamento.EnviadoAuditoria, new { @id = "txtEnviadoAuditoria", @class = "form-control", @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Acompanhamento.EnviadoAuditoria, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-10">
+                        <label>ENVIADO PARA JANELA UNICA:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Acompanhamento.EnviadoJU, new { @id = "txtEnviadoJU", @class = "form-control", style = "width: 20%", @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Acompanhamento.EnviadoJU, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            <div class="row">
+                    <div class="col-sm-12">
+                        <label>STATUS PAGAMENTO:</label>
+                        @Html.DropDownListFor(x => x.AcaoMarketing.Acompanhamento.StatusPagamento, new List<SelectListItem>
+                        {
+                            new SelectListItem{ Text="PENDENTE"},
+                            new SelectListItem{ Text="PAGO"},
+                            new SelectListItem{ Text="A. APROVAÇÕES"},
+                            new SelectListItem{ Text="A. LANÇAMENTO"},
+                            new SelectListItem{ Text="A. VENCIDO"}
+                        }, "SELECIONE", new { @id = "DDLStatus", @class = "form-control", style = "width: 20%" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Acompanhamento.StatusPagamento, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <input id="btnAtualizaAcompanhamento" class="btn btn-primary" type="submit" style="width:150px" value="Atualizar" />
+                </div>
+            </div>
+
+        }
+
+
+        </div>
+    </div>

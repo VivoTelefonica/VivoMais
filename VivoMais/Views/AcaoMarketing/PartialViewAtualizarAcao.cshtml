@@ -1,0 +1,861 @@
+﻿@using System.Collections
+@model VivoMais.Models.AcaoMarketingViewModel
+
+@* Javascript *@
+<script type="text/javascript" src="~/Scripts/jquery-1.8.0.js"></script>
+<script type="text/javascript" src="~/Scripts/ajax.js"></script>
+<script type="text/javascript" src="~/js/moment/moment.min.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<script type="text/javascript">
+
+    function FuncSucesso() {
+        alert('Ação alterada com Sucesso!');
+    }
+
+    function FuncError() {
+        alert('Ocorreu um erro ao tentar processar sua solicitação!');
+    }
+
+    function formatReal(int) {
+        var tmp = int + '';
+        tmp = tmp.replace(/([0-9]{2})$/g, ",$1");
+        if (tmp.length > 6)
+            tmp = tmp.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+
+        return tmp;
+    }
+
+    function ZerarDias() {
+        document.getElementById("txt1").value = "0";
+        document.getElementById("txt2").value = "0";
+        document.getElementById("txt3").value = "0";
+        document.getElementById("txt4").value = "0";
+        document.getElementById("txt5").value = "0";
+        document.getElementById("txt6").value = "0";
+        document.getElementById("txt7").value = "0";
+        document.getElementById("txt8").value = "0";
+        document.getElementById("txt9").value = "0";
+        document.getElementById("txt10").value = "0";
+        document.getElementById("txt11").value = "0";
+        document.getElementById("txt12").value = "0";
+        document.getElementById("txt13").value = "0";
+        document.getElementById("txt14").value = "0";
+        document.getElementById("txt15").value = "0";
+        document.getElementById("txt16").value = "0";
+        document.getElementById("txt17").value = "0";
+        document.getElementById("txt18").value = "0";
+        document.getElementById("txt19").value = "0";
+        document.getElementById("txt20").value = "0";
+        document.getElementById("txt21").value = "0";
+        document.getElementById("txt22").value = "0";
+        document.getElementById("txt23").value = "0";
+        document.getElementById("txt24").value = "0";
+        document.getElementById("txt25").value = "0";
+        document.getElementById("txt26").value = "0";
+        document.getElementById("txt27").value = "0";
+        document.getElementById("txt28").value = "0";
+        document.getElementById("txt29").value = "0";
+        document.getElementById("txt30").value = "0";
+        document.getElementById("txt31").value = "0";
+    }
+
+    function SomaDiasAcoes() {
+        document.getElementById("txtInsercoes").value =
+            (
+                parseInt($("#txt1").val()) +
+                parseInt($("#txt2").val()) +
+                parseInt($("#txt3").val()) +
+                parseInt($("#txt4").val()) +
+                parseInt($("#txt5").val()) +
+                parseInt($("#txt6").val()) +
+                parseInt($("#txt7").val()) +
+                parseInt($("#txt8").val()) +
+                parseInt($("#txt9").val()) +
+                parseInt($("#txt10").val()) +
+                parseInt($("#txt11").val()) +
+                parseInt($("#txt12").val()) +
+                parseInt($("#txt13").val()) +
+                parseInt($("#txt14").val()) +
+                parseInt($("#txt15").val()) +
+                parseInt($("#txt16").val()) +
+                parseInt($("#txt17").val()) +
+                parseInt($("#txt18").val()) +
+                parseInt($("#txt19").val()) +
+                parseInt($("#txt20").val()) +
+                parseInt($("#txt21").val()) +
+                parseInt($("#txt22").val()) +
+                parseInt($("#txt23").val()) +
+                parseInt($("#txt24").val()) +
+                parseInt($("#txt25").val()) +
+                parseInt($("#txt26").val()) +
+                parseInt($("#txt27").val()) +
+                parseInt($("#txt28").val()) +
+                parseInt($("#txt29").val()) +
+                parseInt($("#txt30").val()) +
+                parseInt($("#txt31").val())
+            )
+    }
+
+    function PreencherDias() {
+        ZerarDias();
+        moment.locale('pt-BR');
+
+        var DtIni = moment($('#txtPreencherDiasIni').val(), 'DD/MM/YYYY');
+        var DtFim = moment($('#txtPreencherDiasFim').val(), 'DD/MM/YYYY');
+        var QTD = $("#txtQTD").val()
+
+        if ((DtIni == "") || (DtFim == "") || (QTD == "")) {
+            DtFim = DtFim.add(1, 'days');
+            var days = DtFim.diff(DtIni, 'days');
+
+            if (days > 31) {
+                alert('O intervalo entre as datas não pode ser maior que 31 dias');
+                $("#txtPreencherDiasIni").val("");
+                $("#txtPreencherDiasFim").val("");
+                $("#txtQTD").val("0");
+            }
+        }
+        else {
+            if (!((DtIni == "") || (DtFim == ""))) {
+                var dt = new Date(DtIni);
+                for (var contL = 0; contL < 31; contL++) {
+                    var la = contL + 1;
+
+                    var QtdPecas = document.getElementById("txt" + la);
+                    $("#txt" + la).attr("readonly", false);
+                    $("#txt" + la).removeAttr('disabled');
+
+                    $('#Label' + la).text(DtIni.format('DD') + '/' + DtIni.format('MM') + ":");
+
+                    if (DtFim >= DtIni) {
+                        QtdPecas.value = $("#txtQTD").val();
+                    }
+
+                    DtIni = DtIni.add(1, 'days');
+                }
+                SomaDiasAcoes();
+            }
+        }
+    }
+
+    $(document).ready(function () {
+
+        //PreencherDias();
+
+        //for (var contL = 0; contL < 31; contL++) {
+        //    var la = contL + 1;
+
+        //    $("#txt" + la).attr("readonly", true);
+        //    $("#txt" + la).attr('disabled', 'disabled');
+        //}
+
+        $("#txtPreencherDiasIni").datepicker({
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
+            dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+        });
+
+        $("#txtPreencherDiasFim").datepicker({
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
+            dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+        });
+
+
+        $("#DDLUf").change(function () {
+            $("#DDLDdd").empty();
+            $("#DDLRede").empty();
+            $("#txtCanal").val("");
+            $("#txtValorVerba").val("0");
+            $("#DDLVendedor").empty();
+            $("#txtRazaoSocial").val("");
+            $("#loading").show();
+
+            $.ajax({
+                type: 'POST',
+                url: '/ResetSenha/ObterDdd',
+                dataType: 'json',
+                data: { uf: $("#DDLUf").val() },
+
+                success: function (DDD) {
+                    $("#DDLDdd").append("<option value=''>SELECIONE</option>");
+                    $.each(DDD, function (i, DDD) {
+                        $("#DDLDdd").append('<option>' + DDD.Ddd + '</option>');
+                        $('#loading').hide();
+                    });
+                },
+                error: function (ex) {
+                    alert('Ocorreu um erro ao tentar processar sua solicitação.' + ex);
+                }
+            });
+            return false;
+        });
+
+        $("#DDLDdd").change(function () {
+            $("#txtCanal").empty();
+            $("#txtValorVerba").val("0");
+            $("#DDLVendedor").empty();
+            $("#txtRazaoSocial").val("");
+            $("#DDLRede").empty();
+
+            $("#loading").show();
+            $.ajax({
+                type: 'POST',
+                url: '/Parceiro/ObterParceirosRede',
+                dataType: 'json',
+                data: { Ddd: $("#DDLDdd").val() },
+
+                success: function (REDE) {
+                    $("#DDLRede").append("<option value=''>SELECIONE</option>");
+                    $.each(REDE, function (i, REDE) {
+                        $("#DDLRede").append('<option>' + REDE.Rede + '</option>');
+                        $('#loading').hide();
+                    });
+                },
+                error: function (ex) {
+                    alert('Ocorreu um erro ao tentar processar sua solicitação.' + ex);
+                }
+            });
+        });
+
+        $("#DDLRede").change(function () {
+            $("#txtCanal").val("");
+            $("#txtValorVerba").val("0");
+            $("#DDLVendedor").empty();
+            $("#txtRazaoSocial").val("");
+
+
+            $("#loading").show();
+
+            $.ajax({
+                type: 'POST',
+                url: '/Parceiro/ObterAdabasDDD',
+                dataType: 'json',
+                data: { Rede: $("#DDLRede").val(), Ddd: $("#DDLDdd").val(), TipoVerba: 'Verba Cooperada' },
+
+                success: function (Adabas) {
+                    $("#DDLVendedor").append("<option value=''>SELECIONE</option>");
+
+                    $.each(Adabas, function (i, Adabas) {
+                        $("#DDLVendedor").append('<option>' + Adabas.Vendedor + '</option>');
+                        var Valor = formatReal(Adabas.Saldo)
+                        $("#txtValorVerba").val(Valor);
+                        $('#loading').hide();
+                    });
+                },
+                error: function (ex) {
+                    alert('Ocorreu um erro ao tentar processar sua solicitação.' + ex);
+                }
+            });
+        });
+
+        $("#DDLVendedor").change(function () {
+            $("#txtCanal").empty();
+            $("#txtValorVerba").empty("");
+            $("#txtRazaoSocial").val("");
+
+
+            $("#loading").show();
+
+            $.ajax({
+                type: 'POST',
+                url: '/Parceiro/ObterInformacoesParceiros',
+                dataType: 'json',
+                data: { Adabas: $("#DDLVendedor").val() },
+
+                success: function (Adabas) {
+                    $('#loading').hide();
+                    $("#txtCanal").val(Adabas.Canal);
+                    $("#txtRazaoSocial").val(Adabas.RazaoSocial);
+                    $("#txtIxos").val(Adabas.Ixos);
+                },
+                error: function (ex) {
+                    alert('Ocorreu um erro ao tentar processar sua solicitação.' + ex);
+                }
+            });
+            return false;
+        });
+
+        $("#DDLTipoMidia").change(function () {
+            $("#DDLMidiaDetalhada").empty();
+            $("#loading").show();
+
+            $.ajax({
+                type: 'POST',
+                url: '/AcaoMarketing/ObterMidiaDetalhada',
+                dataType: 'json',
+                data: { Midia: $("#DDLTipoMidia").val() },
+
+                success: function (MidiaDetalhada) {
+                    $("#DDLMidiaDetalhada").append("<option value=''>SELECIONE</option>");
+                    $.each(MidiaDetalhada, function (i, MidiaDetalhada) {
+                        $("#DDLMidiaDetalhada").append('<option value=' + MidiaDetalhada.IdMidiaDetalhada + '>' + MidiaDetalhada.MidiaDetalhada + '</option>');
+                        $('#loading').hide();
+                    });
+                },
+                error: function (ex) {
+                    alert('Ocorreu um erro ao tentar processar sua solicitação.' + ex);
+                }
+            });
+            return false;
+        });
+
+        $("#DDLTipoMidia").change(function () {
+            $("#txtInsercoes").val("0");
+            $("#txtQtdPecas").val("0");
+            ZerarDias();
+
+
+            if (
+                $("#DDLTipoMidia").val() == "5" ||     //Televisão
+                $("#DDLTipoMidia").val() == "16" ||    //Cinema
+                $("#DDLTipoMidia").val() == "23" ||    //Rádio
+                $("#DDLTipoMidia").val() == "25" ||    //Mídias e ações na internet
+                $("#DDLMidiaDetalhada").val() == "75"  //Anúncio
+                ) {
+                var QtdPecas = document.getElementById("txtQtdPecas");
+                QtdPecas.value = "1";
+                QtdPecas.disable = false;
+                QtdPecas.readOnly = true;
+            }
+            else {
+                var QtdPecas = document.getElementById("txtQtdPecas");
+                QtdPecas.value = "0";
+                QtdPecas.disable = true;
+                QtdPecas.readOnly = false;
+            }
+
+        });
+
+        $("#DDLMidiaDetalhada").change(function () {
+            $("#txtInsercoes").val("0");
+            $("#txtQtdPecas").val("0");
+            ZerarDias();
+
+            if ($("#DDLMidiaDetalhada").val() == "75") {   //Anúncio
+                var QtdPecas = document.getElementById("txtQtdPecas");
+                QtdPecas.value = "1";
+                QtdPecas.disable = false;
+                QtdPecas.readOnly = true;
+            }
+            else {
+                var QtdPecas = document.getElementById("txtQtdPecas");
+                QtdPecas.value = "0";
+                QtdPecas.disable = true;
+                QtdPecas.readOnly = false;
+            }
+        });
+
+        $("#txtValorTotalAcao").change(function () {
+
+
+            if (parseInt($("#txtPercentualVivo").val()) > 90) {
+                alert('A ação não pode possuir um percentual maior que 90%');
+                $("#txtPercentualVivo").val("")
+                $("#txtValorTotalVivo").val("")
+            }
+
+            else {
+                $.ajax({
+                    type: 'POST',
+                    url: '/AcaoMarketing/CalculoPercentual',
+                    dataType: 'json',
+                    data: { ValorTotalAcao: $("#txtValorTotalAcao").val(), ValorVerba: $("#txtValorVerba").val(), PercentualVivo: $("#txtPercentualVivo").val(), ValorTotalVivo: $("#txtValorTotalVivo").val(), Id: $("#txtId").val() },
+                    success: function (retorno) {
+                        if (retorno[5] == "0") {
+                            alert('Impossivel Prosseguir. Saldo insuficiente para realizar a ação');
+                            $("#txtPercentualVivo").val(retorno[2])
+                            $("#txtValorTotalVivo").val(retorno[1])
+                            $("#txtValorTotalRede").val(retorno[3])
+                            $("#txtValorVerba").val(retorno[5])
+                            $("#txtPercentualParticipacaoRede").val(retorno[4])
+                        }
+                        else {
+                            $("#txtPercentualVivo").val(retorno[2])
+                            $("#txtValorTotalVivo").val(retorno[1])
+                            $("#txtValorTotalRede").val(retorno[3])
+                            $("#txtValorVerba").val(retorno[5])
+                            $("#txtPercentualParticipacaoRede").val(retorno[4] + '%')
+                        }
+
+                        $('#loading').hide();
+                    },
+                    error: function (ex) {
+                        $("#txtPercentualVivo").val("")
+                        $("#txtValorTotalVivo").val("")
+                        $("#txtPercentualParticipacaoRede").val("")
+                        $("#txtValorTotalRede").val("")
+
+                        alert('Ocorreu um erro ao tentar processar sua solicitação.' + ex);
+                    }
+                });
+            }
+        });
+
+        $("#txtPercentualVivo").change(function () {
+
+
+            if (parseInt($("#txtPercentualVivo").val()) > 90) {
+                alert('A ação não pode possuir um percentual maior que 90%');
+                $("#txtPercentualVivo").val("")
+                $("#txtValorTotalVivo").val("")
+            }
+
+            else {
+                $.ajax({
+                    type: 'POST',
+                    url: '/AcaoMarketing/CalculoPercentual',
+                    dataType: 'json',
+                    data: { ValorTotalAcao: $("#txtValorTotalAcao").val(), ValorVerba: $("#txtValorVerba").val(), PercentualVivo: $("#txtPercentualVivo").val(), ValorTotalVivo: $("#txtValorTotalVivo").val(), Id: $("#txtId").val() },
+                    success: function (retorno) {
+                        if (retorno[6] == "0") {
+                            alert('Impossivel Prosseguir. Saldo insuficiente para realizar a ação');
+                            $("#txtPercentualVivo").val(retorno[2])
+                            $("#txtValorTotalVivo").val(retorno[1])
+                            $("#txtValorTotalRede").val(retorno[3])
+                            $("#txtValorVerba").val(retorno[5])
+                            $("#txtPercentualParticipacaoRede").val(retorno[4])
+                        }
+                        else {
+                            $("#txtPercentualVivo").val(retorno[2])
+                            $("#txtValorTotalVivo").val(retorno[1])
+                            $("#txtValorTotalRede").val(retorno[3])
+                            $("#txtValorVerba").val(retorno[5])
+                            $("#txtPercentualParticipacaoRede").val(retorno[4] + '%')
+                        }
+
+                        $('#loading').hide();
+                    },
+                    error: function (ex) {
+                        $("#txtPercentualVivo").val("")
+                        $("#txtValorTotalVivo").val("")
+                        $("#txtPercentualParticipacaoRede").val("")
+                        $("#txtValorTotalRede").val("")
+
+                        alert('Ocorreu um erro ao tentar processar sua solicitação.' + ex);
+                    }
+                });
+            }
+        });
+    });
+
+</script>
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title" id="myModalLabel">VIVO MAIS+</h4>
+</div>
+<div class="panel-body">
+    <div class="form-group">
+
+        @using (Ajax.BeginForm("AtualizarAcao", "AcaoMarketing", null, new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "feedback", HttpMethod = "Post", OnSuccess = "FuncSucesso", OnFailure = "FuncError" }, new { @id = "formID" }))
+        {
+            if (Model != null)
+            {
+                <div class="row">
+                    <div class="col-sm-12">
+                        @Html.HiddenFor(x => x.AcaoMarketing.Id, new { @id = "txtId", @class = "form-control" })
+                        @Html.HiddenFor(x => x.AcaoMarketing.Protocolo, new { @id = "txtProtocolo", @class = "form-control" })
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-sm-2">
+                        <label>MES DA AÇÃO:</label>
+                        @Html.DropDownListFor(x => x.AcaoMarketing.MesAcao, new SelectList(new List<string> { Model.AcaoMarketing.MesAcao }), new { @id = "DDLMesAcao", @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.MesAcao, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-10">
+                        <label>REGIONAL:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Parceiro.Regional, new { @id = "DDLRegional", @class = "form-control", style = "width: 8%" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Parceiro.Regional, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-2">
+                        <label>UF:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Parceiro.Uf, new { @id = "DDLUf", @readonly = "readonly", @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Parceiro.Uf, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-10">
+                        <label>DDD:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Parceiro.Ddd, new { @id = "DDLDdd", @readonly = "readonly", @class = "form-control", style = "width: 18%" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Parceiro.Ddd, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-5">
+                        <label>REDE:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Parceiro.Rede, new { @id = "DDLRede", @readonly = "readonly", @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Parceiro.Rede, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-7">
+                        <label>PONTO DE VENDA:</label>
+                        @Html.DropDownListFor(x => x.AcaoMarketing.Parceiro.Vendedor, new SelectList((IEnumerable)ViewData["VENDEDOR"]), new { @id = "DDLVendedor", @class = "form-control", style = "width: 20%" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Parceiro.Vendedor, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-2">
+                        <label>VALOR DA VERBA:</label>
+                        @Html.TextBoxFor(x => x.ValorVerba, new { @id = "txtValorVerba", @class = "form-control", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(x => x.ValorVerba, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-10">
+                        <label>VERBA:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.OrigemVerba, new { @id = "txtOrigemVerba", @class = "form-control", @readonly = "readonly", style = "width: 20%" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.OrigemVerba, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-5">
+                        <label>RAZÃO SOCIAL:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Parceiro.RazaoSocial, new { @id = "txtRazaoSocial", @readonly = "readonly", @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Parceiro.RazaoSocial, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-2">
+                        <label>CANAL:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Parceiro.Canal, new { @id = "txtCanal", @readonly = "readonly", @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Parceiro.Canal, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-5">
+                        <label>NÚMERO DE IXO:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Parceiro.Ixos, new { @id = "txtIxos", @class = "form-control", style = "width: 35%" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Parceiro.Ixos, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>NOME DO CONTATO DA REDE:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.NomeContatoRede, new { @id = "txtNomeContatoRede", @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.NomeContatoRede, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-3">
+                        <label>TELEFONE DO CONTATO DA REDE:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.TelefoneContatoRede, new { @id = "txtTelefoneContatoRede", @OnKeyPress = "formatarMascara('##-#####-####', this)", @maxlength = "13", @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.TelefoneContatoRede, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-5">
+                        <label>EMAIL DO CONTATO DA REDE:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.EmailContatoRede, new { @id = "txtEmailContatoRede", @class = "form-control", style = "width: 60%" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.EmailContatoRede, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-sm-3">
+                        <label>TIPO DE MÍDIA:</label>
+                        @Html.DropDownListFor(x => x.AcaoMarketing.Midia.IdTipoMidia, new List<SelectListItem>
+                            {
+                                new SelectListItem{ Text="CINEMA", Value="1" },
+                                new SelectListItem{ Text="JORNAL/ REVISTA", Value="2" },
+                                new SelectListItem{ Text="MÍDIA EXTERIOR", Value="3" },
+                                new SelectListItem{ Text="MÍDIAS E AÇÕES NA INTERNET", Value="4" },
+                                new SelectListItem{ Text="RÁDIO", Value="5" },
+                                new SelectListItem{ Text="SHOPPINGS", Value="6" },
+                                new SelectListItem{ Text="TELEVISÃO", Value="7" },
+                                new SelectListItem{ Text="VIVO MÍDIAS", Value="8" }
+                            }, "SELECIONE",
+                            new { @id = "DDLTipoMidia", @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Midia.IdTipoMidia, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-3">
+                        <label>MÍDIA DETALHADA:</label>
+                        @Html.DropDownListFor(x => x.AcaoMarketing.MidiaDetalhada.MidiaDetalhada, new SelectList((IEnumerable)ViewData["MIDIADETALHADA"]), new { @id = "DDLMidiaDetalhada", @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.MidiaDetalhada.MidiaDetalhada, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-6">
+                        <label>CAMPANHA MACRO:</label>
+                        @Html.DropDownListFor(x => x.AcaoMarketing.CampanhaMacro, new SelectList(new List<string> { "MÃES", "NAMORADOS", "PAIS", "NATAL", "REGIONAL", "OUTROS" }), "SELECIONE", new { @id = "DDLCampanhaMacro", @class = "form-control", style = "width: 50%" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.CampanhaMacro, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-3">
+                        <label>FOCO PRINCIPAL:</label>
+                        @Html.DropDownListFor(x => x.AcaoMarketing.FocoPrincipal, new SelectList(new List<string> { "CHIP", "COMBOS", "CONTROLE", "DESBLOQUEADO", "DTH", "MULTIVIVO", "PORTABILIDADE", "PÓS PAGO OUTROS", "PÓS PAGO SMARTPHONE", "PRÉ PAGO", "PROGRAMA DE PONTOS", "SVA", "VIM PÓS", "VIM PRÉ", "VIVO BOX", "VIVO DIRETO", "VIVO FIXO", "VIVO RESIDENCIAL", "VIVO SPEEDY", "VIVO TUDO" }), "SELECIONE", new { @id = "DDLFocoPrincipal", @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.FocoPrincipal, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-3">
+                        <label>FORMATO DO MATERIAL:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.FormatoMaterial, new { @id = "txtFormatoMaterial", @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.FormatoMaterial, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-6">
+                        <label>VEÍCULO COM TELEFONE:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Veiculo, new { @id = "txtVeiculo", @class = "form-control", style = "width: 75%" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.Veiculo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-7">
+                        <label>DESCRIÇÃO DA AÇÃO:</label>
+                        @Html.TextAreaFor(x => x.AcaoMarketing.DescricaoAcao, new { @id = "txtDescricaoAcao", @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.DescricaoAcao, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-sm-5">
+                        <label>QUANTIDADE DE PEÇAS:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.QtdAcoes, new { @id = "txtQtdPecas", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width: 30%" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.QtdAcoes, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>PREENCHER DIAS:</label>
+                        <div class="form-inline">
+                            <div class="form-group">
+                                @Html.TextBoxFor(x => x.AcaoMarketing.DtPreencherDiasIni, new { @id = "txtPreencherDiasIni", @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", placeholder = @DateTime.Now.ToString("dd/MM/yyyy"), @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                                <br />
+                                @Html.ValidationMessageFor(x => x.AcaoMarketing.DtPreencherDiasIni, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                <label>a</label>
+                            </div>
+                            <div class="form-group">
+                                @Html.TextBoxFor(x => x.AcaoMarketing.DtPreencherDiasFim, new { @id = "txtPreencherDiasFim", @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", placeholder = @DateTime.Now.ToString("dd/MM/yyyy"), @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                                <br />
+                                @Html.ValidationMessageFor(x => x.AcaoMarketing.DtPreencherDiasFim, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-1">
+                        <label>QTD:</label>
+                        <input id="txtQTD" class="form-control" value="0" onkeypress="return formatoNumero(event)" style="width:70%" type="text" />
+                    </div>
+                    <div class="col-sm-7">
+                        <input id="btnCadastrarAcao" class="btn btn-success" style="margin-top:3.5%" type="button" onclick="PreencherDias()" value="Preencher Dias" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <label>DIAS DA AÇÃO:</label>
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label1">1:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia1, new { @id = "txt1", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label2">2:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia2, new { @id = "txt2", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label3">3:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia3, new { @id = "txt3", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label4">4:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia4, new { @id = "txt4", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label5">5:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia5, new { @id = "txt5", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label6">6:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia6, new { @id = "txt6", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label7">7:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia7, new { @id = "txt7", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label8">8:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia8, new { @id = "txt8", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label9">9:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia9, new { @id = "txt9", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label10">10:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia10, new { @id = "txt10", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-1">
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label11">11:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia11, new { @id = "txt11", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label12">12:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia12, new { @id = "txt12", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label13">13:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia13, new { @id = "txt13", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label14">14:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia14, new { @id = "txt14", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label15">15:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia15, new { @id = "txt15", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label16">16:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia16, new { @id = "txt16", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label17">17:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia17, new { @id = "txt17", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label18">18:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia18, new { @id = "txt18", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label19">19:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia19, new { @id = "txt19", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label20">20:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia20, new { @id = "txt20", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-1">
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label21">21:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia21, new { @id = "txt21", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label22">22:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia22, new { @id = "txt22", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label23">23:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia23, new { @id = "txt23", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label24">24:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia24, new { @id = "txt24", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label25">25:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia25, new { @id = "txt25", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label26">26:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia26, new { @id = "txt26", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label27">27:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia27, new { @id = "txt27", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label28">28:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia28, new { @id = "txt28", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label29">29:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia29, new { @id = "txt29", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label30">30:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia30, new { @id = "txt30", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                        <div class="col-sm-1">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <label></label>
+                        </div>
+                        <div class="col-sm-1">
+                            <label id="Label31">31:</label>
+                            @Html.TextBoxFor(x => x.AcaoMarketing.Dia31, new { @id = "txt31", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-2">
+                        <label>INSERÇÕES:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.Insercoes, new { @id = "txtInsercoes", @readonly = "readonly", @enable = "false", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                    </div>
+
+                    <div class="col-sm-2">
+                        <label>MÍDIA EXCLUSIVA VIVO:</label>
+                        @Html.DropDownListFor(x => x.AcaoMarketing.MidiaExclusivaVivo, new SelectList(new List<string> { "SIM", "NÃO" }), "SELECIONE", new { @id = "DDLexclusiva", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.MidiaExclusivaVivo, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-sm-8">
+                        <label>CUSTO UNITARIO:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.CustoUnitario, new { @id = "txtCustoUnitario", @class = "form-control", style = "width: 20%" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.CustoUnitario, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-2">
+                        <label>VALOR TOTAL DA AÇÃO:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.ValorTotalAcao, new { @id = "txtValorTotalAcao", @onKeydown = "FormataNumero(this,20,event,2)", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.ValorTotalAcao, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-sm-2">
+                        <label>% DA VIVO:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.PercentualParticipacaoVivo, new { @id = "txtPercentualVivo", @onkeypress = "return formatoNumeroVirgula(event)", @Maxlength = "5", @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.PercentualParticipacaoVivo, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-sm-8">
+                        <label>VALOR TOTAL DA VIVO:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.ValorTotalVivo, new { @id = "txtValorTotalVivo", @onKeydown = "FormataNumero(this,20,event,2)", @readonly = "readonly", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width: 20%" })
+                        @Html.ValidationMessageFor(x => x.AcaoMarketing.ValorTotalVivo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-1">
+                        <label>% DA REDE:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.PercentualRede, new { @id = "txtPercentualParticipacaoRede", @readonly = "readonly", @class = "form-control" })
+                    </div>
+
+                    <div class="col-sm-11">
+                        <label>VALOR TOTAL DA REDE:</label>
+                        @Html.TextBoxFor(x => x.AcaoMarketing.ValorTotalRede, new { @id = "txtValorTotalRede", @readonly = "readonly", @class = "form-control", style = "width: 20%" })
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <input id="btnAtualizarAcao" class="btn btn-primary" type="submit" value="Atualizar Ação" />
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

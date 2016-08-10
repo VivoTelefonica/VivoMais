@@ -1,0 +1,150 @@
+﻿@model VivoMais.Models.CarteiraViewModel
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        var table = $('#TableCarteira').DataTable();
+
+        $('thead input[name="select_all"]', table.table().container()).on('click', function (e) {
+            if (this.checked) {
+                $('#TableCarteira tbody input[type="checkbox"]:not(:checked)').trigger('click');
+            } else {
+                $('#TableCarteira tbody input[type="checkbox"]:checked').trigger('click');
+            }
+
+            e.stopPropagation();
+        });
+    });
+
+
+
+    function AtualizarCarteira(){
+        $("#loading").show();
+        var checked = [];
+        var i=0;
+
+        var oTable = $('#TableCarteira').DataTable();
+        var rowcollection =  oTable.$("input[type='checkbox']:checked", {"page": "all"});
+        rowcollection.each(function(index,elem){
+            var checkbox_value = $(elem).val();
+            var DDLTerritorial = document.getElementById("DDLTerritorial" + checkbox_value);
+            var DDLNovoGc = document.getElementById("DDLNovoGc" + checkbox_value);
+            var Canal =  $("#DDLCanal").val();
+
+            checked[i] = [checkbox_value,DDLTerritorial.options[DDLTerritorial.selectedIndex].text, DDLNovoGc.options[DDLNovoGc.selectedIndex].text, document.getElementById("txtObs" + checkbox_value).value, Canal];
+            i = i + 1;
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: '/Carteira/AtualizarCarteira',
+            dataType: 'json',
+            data: { ArrayCk: checked },
+            success: function (returnValue) {
+                alert('Carteira atualizada com sucesso!');
+                $('#loading').hide();
+            },
+            failure: function (returnValue) {
+                alert("Ocorreu um problema ao tentar extrair o Excel. Tente novamente.");
+                $('#loading').hide();
+            },
+            error: function (response) {
+                $('#loading').hide();
+            }
+        });
+    }
+
+
+    function AdicionarLinhaDataTable(Vendedor, RazaoSocial, Canal, Cidade, Gestor) {
+        var t = $('#TableCarteira').DataTable();
+
+        var str = @Html.Raw(Json.Encode(ViewData["GESTOR"]));
+
+        var option = "";
+
+        $.each(str, function (index, item) {
+            if(item == Gestor)
+            {
+                option = option + '<option selected value="' + item + '">' + item + '</option>';
+            }
+            else
+            {
+                option = option + '<option value="' + item + '">' + item + '</option>';
+            }
+
+        });
+
+        Cont = t.data().rows().count()+1;
+
+        t.row.add([
+                     "",
+                    "<input type='checkbox' id='checkbox-1-" + Cont + "' value=" + Vendedor + Cont + " checked='checked' /><label style='margin-left:9px' for='checkbox-1-" + Cont + "' />",
+                    Vendedor + ' ' + Cont,
+                    RazaoSocial,
+                    Cidade,
+                    "<select style='width: 90%'; id='DDLTerritorial" + Vendedor + Cont + "' class='form-control'>" + option + "</select>",
+                    Gestor,
+                    "<select style='width: 90%'; id='DDLNovoGc" + Vendedor + Cont + "' class='form-control'>" + option + "</select>",
+                    "<textarea id=txtObs" + Vendedor + Cont + " maxlength='255' class='form-control' placeholder='Observação'>"
+        ]).draw(false);
+    }
+</script>
+
+
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="dataTable_wrapper">
+            <table class="table table-striped table-bordered" id="TableCarteira">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th><input type="checkbox" name="select_all" id="checkbox-1-x" checked="checked" value="1" /><label for="checkbox-1-x" /></th>
+                        <th style="width:12%">Adabas</th>
+                        <th style="width:21%">Razão Social</th>
+                        <th>Cidade</th>
+                        <th style="width:15%">Territorial</th>
+                        <th style="width:15%">Gerente de Contas</th>
+                        <th style="width:15%">Novo GC</th>
+                        <th style="width:20%">OBS</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{int cont = 0;}
+
+                    @foreach (VivoMais.Repositorio.Entidades.Parceiro Parceiro in Model.ListParceiro)
+                    {
+                        <tr class="odd gradeX">
+                            @if (Parceiro.Canal == "RECARGA")
+                            {
+                                <td><input id="addRowx" onclick="AdicionarLinhaDataTable('@Parceiro.Vendedor','@Parceiro.RazaoSocial','@Parceiro.Canal','@Parceiro.Cidade','@Parceiro.Gestor');" type="image" src="~/Imagens/Icones/Mais.ico" width="35" height="35" /></td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+
+                            <td><input type="checkbox" id="checkbox-1-@cont" value="@Parceiro.Vendedor" checked="checked" /><label style="margin-left:9px" for="checkbox-1-@cont" /></td>
+                            <td>@Parceiro.Vendedor.Substring(0, 11)</td>
+                            <td>@Parceiro.RazaoSocial</td>
+                            <td>@Parceiro.Cidade</td>
+                            <td>@Html.DropDownListFor(x => x.Parceiro.GerenteTerritorial, new SelectList((System.Collections.IEnumerable)ViewData["GESTOR"]), Parceiro.GerenteTerritorial, new { @id = ("DDLTerritorial" + @Parceiro.Vendedor), style = "width: 90%", @class = "form-control" })</td>
+                            <td>@Parceiro.Gestor</td>
+                            <td>@Html.DropDownListFor(x => x.Parceiro.NovoGestor, new SelectList((System.Collections.IEnumerable)ViewData["GESTOR"]), Parceiro.NovoGestor, new { @id = ("DDLNovoGc" + @Parceiro.Vendedor), style = "width: 90%", @class = "form-control" })</td>
+                            <td>@Html.TextArea("Observacao", Parceiro.Observacao, new { @id = ("txtObs" + @Parceiro.Vendedor), @placeholder = "Observação", @class = "form-control" })</td>
+                        </tr>
+                            cont = cont + 1;
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <input id="btnBuscar" class="btn btn-success" onclick="AtualizarCarteira();" type="submit" value="Atualizar Carteiras" />
+            </div>
+        </div>
+    </div>
+</div>
+

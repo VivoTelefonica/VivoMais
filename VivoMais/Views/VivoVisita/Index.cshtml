@@ -1,0 +1,1013 @@
+﻿@model VivoMais.Models.VivoVisitaViewModel
+@{
+    ViewBag.Title = "Vivo Visita";
+    if (Session["TipoMenu"].ToString() != "")
+    {
+        Layout = Session["TipoMenu"].ToString();
+    }
+    else
+    {
+        Session.Clear();
+        Session.Abandon();
+        FormsAuthentication.SignOut();
+        Response.Redirect("/Acesso/Index");
+    }
+}
+
+@* Javascript *@
+<script type="text/javascript" src="~/Scripts/jquery-1.8.0.js"></script>
+<script type="text/javascript" src="~/Scripts/ajax.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+
+
+<script type="text/javascript">
+
+    function FuncSucesso() {
+        alert('Visita Incluída com Sucesso!');
+        document.getElementById("formID").reset();
+    }
+
+    function FuncError() {
+        alert('Ocorreu um erro ao tentar processar sua solicitação!');
+    }
+
+    $(document).ready(function () {
+        $('#wizard').smartWizard();
+
+        $('.buttonNext').addClass('btn btn-success');
+        $('.buttonPrevious').addClass('btn btn-primary');
+        $('.buttonFinish').addClass('btn btn-default');
+    });
+</script>
+<!-- /jQuery Smart Wizard -->
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">VIVO VISITA</h3>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Passagem de Loja</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                
+                @using (Ajax.BeginForm("InsereVisitaPassagem", "VivoVisita", null, new AjaxOptions { HttpMethod = "Post", OnSuccess = "FuncSucesso", OnFailure = "FuncError" }, new { @id = "formID", @class = "form-horizontal form-label-left" }))
+                {
+
+                <!-- Smart Wizard -->
+                <div id="wizard" class="form_wizard wizard_horizontal">
+                    <ul class="wizard_steps">
+                        <li>
+                            <a href="#step-1">
+                                <span class="step_no">1</span>
+                                <span class="step_descr">
+                                    Estoque
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#step-2">
+                                <span class="step_no">2</span>
+                                <span class="step_descr">
+                                    Caixa
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#step-3">
+                                <span class="step_no">3</span>
+                                <span class="step_descr">
+                                    Estrutura e Processos
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#step-4">
+                                <span class="step_no">5</span>
+                                <span class="step_descr">
+                                    Positivação
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#step-5">
+                                <span class="step_no">5</span>
+                                <span class="step_descr">
+                                    Pessoas
+                                </span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#step-6">
+                                <span class="step_no">6</span>
+                                <span class="step_descr">
+                                    Vagas
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div id="step-1" style="width:100%">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>A quantidade e os seriais dos aparelhos estão em conformidade com o SAP?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Conformidade:</label>
+                                <br />
+                                @Html.RadioButtonFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisAparelhosSAPSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisAparelhosSAPSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisAparelhosSAPObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisAparelhosSAPPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisAparelhosSAPResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>A quantidade e os seriais dos chips estão em conformidade com o SAP?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Conformidade:</label>
+                                <br />
+                                @Html.RadioButtonFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisChipsSAPSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisChipsSAPSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisChipsSAPObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisChipsSAPPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisChipsSAPResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>A quantidade e os seriais dos cartões de recarga estão em conformidade com o SAP?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Conformidade:</label>
+                                <br />
+                                @Html.RadioButtonFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisCartoesRecargaSAPSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisCartoesRecargaSAPSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisCartoesRecargaSAPObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisCartoesRecargaSAPPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisCartoesRecargaSAPResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>A quantidade e os seriais dos acessórios estão em conformidade com o SAP?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Conformidade:</label>
+                                <br />
+                                @Html.RadioButtonFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisAcessoriosSAPSimNao, "SIM", new { @class = "flat", name = "gender", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisAcessoriosSAPSimNao, "NÃO", new { @class = "flat", name = "gender", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisAcessoriosSAPObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisAcessoriosSAPPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisAcessoriosSAPResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>A quantidade e os seriais dos wearables estão em conformidade com o SAP?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Conformidade:</label>
+                                <br />
+                                @Html.RadioButtonFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisWearablesSAPSimNao, "SIM", new { @class = "flat", name = "gender", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisWearablesSAPSimNao, "NÃO", new { @class = "flat", name = "gender", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisWearablesSAPObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisWearablesSAPPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Estoque.EstoqueQtdSeriaisWearablesSAPResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>As caixas abertas estão com os kits completos?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Conformidade:</label>
+                                <br />
+                                @Html.RadioButtonFor(x => x.Passagem.Estoque.EstoqueCaixasAbertasKitsCompletosSimNao, "SIM", new { @class = "flat", name = "gender", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.Estoque.EstoqueCaixasAbertasKitsCompletosSimNao, "NÃO", new { @class = "flat", name = "gender", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.Estoque.EstoqueCaixasAbertasKitsCompletosObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Estoque.EstoqueCaixasAbertasKitsCompletosPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Estoque.EstoqueCaixasAbertasKitsCompletosResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>Os aparelhos em demonstração, estão com o kit completo?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Conformidade:</label>
+                                <br />
+                                @Html.RadioButtonFor(x => x.Passagem.Estoque.EstoqueAparelhosDemonstracaoKitCompletoSimNao, "SIM", new { @class = "flat", name = "gender", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.Estoque.EstoqueAparelhosDemonstracaoKitCompletoSimNao, "NÃO", new { @class = "flat", name = "gender", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.Estoque.EstoqueAparelhosDemonstracaoKitCompletoObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Estoque.EstoqueAparelhosDemonstracaoKitCompletoPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Estoque.EstoqueAparelhosDemonstracaoKitCompletoResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>Os aparelhos estão alocados no estoque correto. (LVUT, LOJA, RPAR)?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Conformidade:</label>
+                                <br />
+                                @Html.RadioButtonFor(x => x.Passagem.Estoque.EstoqueAparelhosAlocadosEstoqueCorretoSimNao, "SIM", new { @class = "flat", name = "gender", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.Estoque.EstoqueAparelhosAlocadosEstoqueCorretoSimNao, "NÃO", new { @class = "flat", name = "gender", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.Estoque.EstoqueAparelhosAlocadosEstoqueCorretoObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Estoque.EstoqueAparelhosAlocadosEstoqueCorretoPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Estoque.EstoqueAparelhosAlocadosEstoqueCorretoResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label>Demais Considerações:</label>
+                            </div>
+
+                            <div class="col-sm-10">
+                                @Html.TextAreaFor(x => x.Passagem.Estoque.EstoqueDemaisConsideracoes, new { @class = "form-control", rows = 7 })
+                            </div>
+                        </div>
+                    </div>
+                        
+                    <div id="step-2" style="width:100%">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>O valor do fundo de troco está correto?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Conformidade:</label>
+                                <br />
+                                @Html.RadioButtonFor(x => x.Passagem.Caixa.CaixaValorFundoTrocoCorretoSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.Caixa.CaixaValorFundoTrocoCorretoSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.Caixa.CaixaValorFundoTrocoCorretoObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Caixa.CaixaValorFundoTrocoCorretoPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Caixa.CaixaValorFundoTrocoCorretoResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>Não existe reembolso pendente?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.RadioButtonFor(x => x.Passagem.Caixa.CaixaNaoExisteReembolsoPendenteSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.Caixa.CaixaNaoExisteReembolsoPendenteSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.Caixa.CaixaNaoExisteReembolsoPendenteObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Caixa.CaixaNaoExisteReembolsoPendentePrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Caixa.CaixaNaoExisteReembolsoPendenteResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>Não existe pendência nos movimentos do SAP. (FBL5N, VF04, J1BNFE)?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.RadioButtonFor(x => x.Passagem.Caixa.CaixaNaoExistePendenciaMovimentosSAPSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.Caixa.CaixaNaoExistePendenciaMovimentosSAPSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.Caixa.CaixaNaoExistePendenciaMovimentosSAPObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Caixa.CaixaNaoExistePendenciaMovimentosSAPPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Caixa.CaixaNaoExistePendenciaMovimentosSAPResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label>Demais Considerações:</label>
+                            </div>
+
+                            <div class="col-sm-10">
+                                @Html.TextAreaFor(x => x.Passagem.Caixa.CaixaDemaisConsideracoes, new { @class = "form-control", rows = 7 })
+                            </div>
+                        </div>
+                    </div>
+                        
+                    <div id="step-3" style="width:100%">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>Os mobiliários que precisam de reparo estão com OS aberta para regularização?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Conformidade:</label>
+                                <br />
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosMobiliariosReparoOSAbertaRegularizacaoSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosMobiliariosReparoOSAbertaRegularizacaoSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosMobiliariosReparoOSAbertaRegularizacaoObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosMobiliariosReparoOSAbertaRegularizacaoPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosMobiliariosReparoOSAbertaRegularizacaoResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>Os equipamentos que precisam de reparo estão com chamados abertos para regularização?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosEquipamentosReparoChamadosAbertosRegularizacaoSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosEquipamentosReparoChamadosAbertosRegularizacaoSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosEquipamentosReparoChamadosAbertosRegularizacaoObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosEquipamentosReparoChamadosAbertosRegularizacaoPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosEquipamentosReparoChamadosAbertosRegularizacaoResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>Os chamados e OS´s abertos estão dentro do prazo ou existe cobrança?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosChamadosAbertosDentroPrazoCobrançaSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosChamadosAbertosDentroPrazoCobrançaSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosChamadosAbertosDentroPrazoCobrançaObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosChamadosAbertosDentroPrazoCobrançaPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosChamadosAbertosDentroPrazoCobrançaResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>A loja possui chave/controle e foram entregues ao novo gerente?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaPossuiControleNovoGerenteSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaPossuiControleNovoGerenteSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaPossuiControleNovoGerenteObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaPossuiControleNovoGerentePrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaPossuiControleNovoGerenteResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>A loja está organizada?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaOrganizadaSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaOrganizadaSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaOrganizadaObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaOrganizadaPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaOrganizadaResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>Os equipamentos e mobiliários não usados estão aguardando coleta?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosEquipamentosMobiliariosNUsadosAguardandoColetaSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosEquipamentosMobiliariosNUsadosAguardandoColetaSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosEquipamentosMobiliariosNUsadosAguardandoColetaObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosEquipamentosMobiliariosNUsadosAguardandoColetaPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosEquipamentosMobiliariosNUsadosAguardandoColetaResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>Alarmes reinicializados com a senha dos novos gerentes?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosAlarmesReinicializadosSenhaNovosGerentesSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosAlarmesReinicializadosSenhaNovosGerentesSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosAlarmesReinicializadosSenhaNovosGerentesObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosAlarmesReinicializadosSenhaNovosGerentesPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosAlarmesReinicializadosSenhaNovosGerentesResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>A loja possui material de escritório guardado em local adequado e organizado?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaPossuiMaterialEscritorioGuardadoAdequadoSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaPossuiMaterialEscritorioGuardadoAdequadoSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaPossuiMaterialEscritorioGuardadoAdequadoObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaPossuiMaterialEscritorioGuardadoAdequadoPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaPossuiMaterialEscritorioGuardadoAdequadoResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>A loja possui pasta que atende o procedimento de contingência do GSS?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaPastaAtendeProcedimentoContingenciaGSSSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaPastaAtendeProcedimentoContingenciaGSSSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaPastaAtendeProcedimentoContingenciaGSSObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaPastaAtendeProcedimentoContingenciaGSSPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaPastaAtendeProcedimentoContingenciaGSSResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>A loja possui quadro de avisos e em condições de uso?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaQuadroAvisosSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaQuadroAvisosSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaQuadroAvisosObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaQuadroAvisosPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosLojaQuadroAvisosResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>Estão guardados na loja os documentos fiscais. (Ex. Alvará de funcionamento, cartão de CNPJ, etc.)?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosEstaoGuardadosDocumentosFiscaisSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosEstaoGuardadosDocumentosFiscaisSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosEstaoGuardadosDocumentosFiscaisObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosEstaoGuardadosDocumentosFiscaisPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosEstaoGuardadosDocumentosFiscaisResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label>Demais Considerações:</label>
+                            </div>
+
+                            <div class="col-sm-10">
+                                @Html.TextAreaFor(x => x.Passagem.EstruturaProcessos.EstruturaProcessosDemaisConsideracoes, new { @class = "form-control", rows = 7 })
+                            </div>
+                        </div>
+
+                    </div>
+                        
+                    <div id="step-4" style="width:100%">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>Os materiais estão positivados conforme manual de PDV?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Conformidade:</label>
+                                <br />
+                                @Html.RadioButtonFor(x => x.Passagem.Positivacao.PositivacaoMateriaisPositivadosManualPDVSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.Positivacao.PositivacaoMateriaisPositivadosManualPDVSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.Positivacao.PositivacaoMateriaisPositivadosManualPDVObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Positivacao.PositivacaoMateriaisPositivadosManualPDVPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Positivacao.PositivacaoMateriaisPositivadosManualPDVResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>A área de armazenamento está organizada?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Conformidade:</label>
+                                <br />
+                                @Html.RadioButtonFor(x => x.Passagem.Positivacao.PositivacaoAreaArmazenamentoOrganizadaSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.Positivacao.PositivacaoAreaArmazenamentoOrganizadaSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.Positivacao.PositivacaoAreaArmazenamentoOrganizadaObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Positivacao.PositivacaoAreaArmazenamentoOrganizadaPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Positivacao.PositivacaoAreaArmazenamentoOrganizadaResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>Possui a folheteria completa?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Conformidade:</label>
+                                <br />
+                                @Html.RadioButtonFor(x => x.Passagem.Positivacao.PositivacaoPossuiFolheteriaCompletaSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.Positivacao.PositivacaoPossuiFolheteriaCompletaSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.Positivacao.PositivacaoPossuiFolheteriaCompletaObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Positivacao.PositivacaoPossuiFolheteriaCompletaPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Positivacao.PositivacaoPossuiFolheteriaCompletaResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>Possui precificadores?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Conformidade:</label>
+                                <br />
+                                @Html.RadioButtonFor(x => x.Passagem.Positivacao.PositivacaoPossuiPrecificadoresSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.Positivacao.PositivacaoPossuiPrecificadoresSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.Positivacao.PositivacaoPossuiPrecificadoresObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Positivacao.PositivacaoPossuiPrecificadoresPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Positivacao.PositivacaoPossuiPrecificadoresResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label>Demais Considerações:</label>
+                            </div>
+
+                            <div class="col-sm-10">
+                                @Html.TextAreaFor(x => x.Passagem.Positivacao.PositivacaoDemaisConsideracoes, new { @class = "form-control", rows = 7 })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="step-5" style="width:100%">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>Foi solicitado a SPP das vagas em aberto?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Conformidade:</label>
+                                <br />
+                                @Html.RadioButtonFor(x => x.Passagem.Pessoas.PessoasSolicitadoSPPVagasAbertoSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.Pessoas.PessoasSolicitadoSPPVagasAbertoSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.Pessoas.PessoasSolicitadoSPPVagasAbertoObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Pessoas.PessoasSolicitadoSPPVagasAbertoPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Pessoas.PessoasSolicitadoSPPVagasAbertoResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>Não existe colaboradores com pendencia de treinamento?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.RadioButtonFor(x => x.Passagem.Pessoas.PessoasNaoExisteColaboradoresPendenciaTreinamentoSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.Pessoas.PessoasNaoExisteColaboradoresPendenciaTreinamentoSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.Pessoas.PessoasNaoExisteColaboradoresPendenciaTreinamentoObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Pessoas.PessoasNaoExisteColaboradoresPendenciaTreinamentoPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Pessoas.PessoasNaoExisteColaboradoresPendenciaTreinamentoResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>A loja possui arquivo de folha de ponto e todas estão assinadas?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.RadioButtonFor(x => x.Passagem.Pessoas.PessoasLojaPossuiArquivoFolhaPontoTodasAssinadasSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.Pessoas.PessoasLojaPossuiArquivoFolhaPontoTodasAssinadasSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.Pessoas.PessoasLojaPossuiArquivoFolhaPontoTodasAssinadasObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Pessoas.PessoasLojaPossuiArquivoFolhaPontoTodasAssinadasPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Pessoas.PessoasLojaPossuiArquivoFolhaPontoTodasAssinadasResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>A loja possui programação de férias de toda a equipe?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.RadioButtonFor(x => x.Passagem.Pessoas.PessoasLojaPossuiProgramacaoFeriasSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.Pessoas.PessoasLojaPossuiProgramacaoFeriasSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.Pessoas.PessoasLojaPossuiProgramacaoFeriasObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Pessoas.PessoasLojaPossuiProgramacaoFeriasPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Pessoas.PessoasLojaPossuiProgramacaoFeriasResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>Todos os colaboradores possuem crachá?</label>
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.RadioButtonFor(x => x.Passagem.Pessoas.PessoasTodosColaboradoresPossuemCrachaSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                @Html.RadioButtonFor(x => x.Passagem.Pessoas.PessoasTodosColaboradoresPossuemCrachaSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Observação:</label>
+                                @Html.TextAreaFor(x => x.Passagem.Pessoas.PessoasTodosColaboradoresPossuemCrachaObs, new { @class = "form-control", rows = "5" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Prazo:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Pessoas.PessoasTodosColaboradoresPossuemCrachaPrazo, new { @maxlength = "10", @onkeyup = "this.value=CompletaData(this.value);", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Responsável:</label>
+                                @Html.TextBoxFor(x => x.Passagem.Pessoas.PessoasTodosColaboradoresPossuemCrachaResponsavel, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="step-6" style="width:100%">
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label>Quantidade de vagas</label>
+                            </div>
+                            <div class="col-sm-1">
+                                <label>Gerente Geral:</label>
+                            </div>
+                            <div class="col-sm-1">
+                                <label>Gerente de Negócios:</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Consultor de Relacionamento:</label>
+                            </div>
+                            <div class="col-sm-1">
+                                <label>Consultor Premium:</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Consultor de Negócios:</label>
+                            </div>
+                            <div class="col-sm-1">
+                                <label> Analista Comercial:</label>
+                            </div>
+                            <div class="col-sm-1">
+                                <label> Caixa:</label>
+                            </div>
+                            <div class="col-sm-1">
+                                <label> Recepcionista:</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label>Ativos</label>
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasAtivosGerenteGeral, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasAtivosGerenteNegocios, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasAtivosConsultorRelacionamento, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasAtivosConsultorPremium, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasAtivosConsultorNegocios, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasAtivosAnalistaSuporteComercial, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasAtivosCaixa, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasAtivosRecepcionista, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label>Vagas em aberto</label>
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasQuantidadeVagasGerenteGeral, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasQuantidadeVagasGerenteNegocios, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasQuantidadeVagasConsultorRelacionamento, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasQuantidadeVagasConsultorPremium, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasQuantidadeVagasConsultorNegocios, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasQuantidadeVagasAnalistaSuporteComercial, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasQuantidadeVagasCaixa, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasQuantidadeVagasRecepcionista, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label>Licença e Afastados</label>
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasLicencaAfastadosGerenteGeral, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasLicencaAfastadosGerenteNegocios, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasLicencaAfastadosConsultorRelacionamento, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasLicencaAfastadosConsultorPremium, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasLicencaAfastadosConsultorNegocios, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasLicencaAfastadosAnalistaSuporteComercial, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasLicencaAfastadosCaixa, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasLicencaAfastadosRecepcionista, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label>Quadro total</label>
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasQuadroTotalGerenteGeral, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasQuadroTotalGerenteNegocios, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasQuadroTotalConsultorRelacionamento, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasQuadroTotalConsultorPremium, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasQuadroTotalConsultorNegocios, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasQuadroTotalAnalistaSuporteComercial, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasQuadroTotalCaixa, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.TextBoxFor(x => x.Passagem.Vagas.VagasQuadroTotalRecepcionista, new { @class = "form-control", @onkeypress = "return formatoNumero(event)" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <input id="btnCadastrar" class="btn btn-success pull-right" style="width:150px" type="submit" value="Cadastrar" />
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>
+                <!-- End SmartWizard Content -->
+            }
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,151 @@
+﻿@model VivoMais.Models.CarteiraViewModel
+@{
+    ViewBag.Title = "DefinirCarteiras";
+    if (Session["TipoMenu"].ToString() != "")
+    {
+        Layout = Session["TipoMenu"].ToString();
+    }
+    else
+    {
+        Session.Clear();
+        Session.Abandon();
+        FormsAuthentication.SignOut();
+        Response.Redirect("/Acesso/Index");
+    }
+}
+
+@* Javascript *@
+<script type="text/javascript" src="~/Acesso/Js/jquery-2.2.1.js"></script>
+<script type="text/javascript" src="~/Scripts/ajax.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#DDLDdd").change(function () {
+            $("#DDLGestor").empty();
+            $("#loading").show();
+            $.ajax({
+                type: 'POST',
+                url: '/Parceiro/ObterGerenteContasDDD',
+                dataType: 'json',
+                data: { Ddd: $("#DDLDdd").val()},
+                success: function (GC) {
+                    $('#loading').hide();
+                    $("#DDLGestor").append("<option value=''>SELECIONE</option>");
+                    $.each(GC, function (i, GC) {
+                        $("#DDLGestor").append('<option value="' + GC + '">' + GC + '</option>');
+                    });
+                    $("#DDLGestor").append('<option value="TODOS">TODOS</option>');
+                },
+                failure: function (GC) {
+                    $('#loading').hide();
+                },
+                error: function (ex) {
+                    alert('Ocorreu um erro ao tentar processar sua solicitação.' + ex);
+                }
+            });
+        });
+
+        $("#DDLTipoCarteira").change(function () {
+            $("#DDLCanal").empty();
+
+            if (document.getElementById("DDLTipoCarteira").value == "VIVO MÓVEL")
+            {
+                $("#DDLCanal").append("<option value=''>SELECIONE</option>");
+                $("#DDLCanal").append("<option value='LOJA PRÓPRIA'>LOJA PRÓPRIA</option>");
+                $("#DDLCanal").append("<option value='REMOTO'>REMOTO</option>");
+                $("#DDLCanal").append("<option value='RECARGA'>RECARGA</option>");
+                $("#DDLCanal").append("<option value='REVENDA'>REVENDA</option>");
+                $("#DDLCanal").append("<option value='VAREJO'>VAREJO</option>");
+                $("#DDLCanal").append("<option value='TODOS'>TODOS</option>");
+            }
+            else
+            {
+                $("#DDLCanal").append("<option value=''>SELECIONE</option>");
+                $("#DDLCanal").append("<option value='CANAL PROMOTOR'>CANAL PROMOTOR</option>");
+                $("#DDLCanal").append("<option value='DEALERS'>DEALERS</option>");
+                $("#DDLCanal").append("<option value='LOJA PRÓPRIA'>LOJA PRÓPRIA</option>");
+                $("#DDLCanal").append("<option value='REVENDA'>REVENDA</option>");
+                $("#DDLCanal").append("<option value='TELEVENDAS AUTORIZADO'>TELEVENDAS AUTORIZADO</option>");
+                $("#DDLCanal").append("<option value='TODOS'>TODOS</option>");
+            }
+        });
+
+    });
+
+</script>
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">Definir Carteiras</h3>
+    </div>
+</div>
+
+<div class="panel-body">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+
+                @using (Ajax.BeginForm("BuscarCarteira", "Carteira", new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "dvResultado", }, new { @id = "formID" }))
+                {
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>DDD:</label>
+                            @Html.DropDownListFor(x => x.Parceiro.Ddd, new SelectList((System.Collections.IEnumerable)ViewData["DDD"]), "SELECIONE", new { @id = "DDLDdd", @class = "form-control", style = "width: 13%" })
+                            @Html.ValidationMessageFor(x => x.Parceiro.Ddd, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>TIPO DE CARTEIRA:</label>
+                            @Html.DropDownListFor(x => x.TipoCarteira, new SelectList(new List<string> { "VIVO MÓVEL", "FIXO FIXA" }), "SELECIONE", new { @id = "DDLTipoCarteira", @class = "form-control", style = "width: 15%" })
+                            @Html.ValidationMessageFor(x => x.TipoCarteira, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>CANAL:</label>
+                            @Html.DropDownListFor(x => x.Parceiro.Canal, new SelectList(string.Empty), "SELECIONE", new { @id = "DDLCanal", @class = "form-control", style = "width: 20%" })
+                            @Html.ValidationMessageFor(x => x.Parceiro.Canal, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>GERENTE DE CONTAS:</label>
+                            @Html.DropDownListFor(x => x.Parceiro.Gestor, new SelectList(string.Empty), "SELECIONE", new { @id = "DDLGestor", @class = "form-control", style = "width: 40%" })
+                            @Html.ValidationMessageFor(x => x.Parceiro.Gestor, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input id="btnBuscar" class="btn btn-primary" style="width:150px" type="submit" value="Buscar" />
+                        </div>
+                    </div>
+
+
+                }
+
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="dvResultado">
+                        @{
+                            Html.RenderPartial("PartialViewCarteira");
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

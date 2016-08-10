@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VivoMais.Web", "VivoMais\VivoMais.Web.csproj", "{CCE147F6-C7CC-4E16-A9BF-2D7A5ED9FDC6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VivoMais.Repositorio", "VivoMais.Repositorio\VivoMais.Repositorio.csproj", "{9A6BA09E-9A8F-4B56-B70D-8BA0BC843FAC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CCE147F6-C7CC-4E16-A9BF-2D7A5ED9FDC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCE147F6-C7CC-4E16-A9BF-2D7A5ED9FDC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCE147F6-C7CC-4E16-A9BF-2D7A5ED9FDC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCE147F6-C7CC-4E16-A9BF-2D7A5ED9FDC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A6BA09E-9A8F-4B56-B70D-8BA0BC843FAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A6BA09E-9A8F-4B56-B70D-8BA0BC843FAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A6BA09E-9A8F-4B56-B70D-8BA0BC843FAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A6BA09E-9A8F-4B56-B70D-8BA0BC843FAC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,61 @@
+﻿@model VivoMais.Models.AcessoTerceiroViewModel
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+
+        $('#example').dataTable({
+            order: [[5, "desc"]],
+            bHeader: true,
+        });
+    });
+
+</script>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="dataTable_wrapper">
+                <table class="table table-striped table-bordered table-hover" id="example">
+                    <thead>
+                        <tr>
+                            <th style="width:10%">EXTRAIR</th>
+                            <th>UF</th>
+                            <th>GERENTE DE CONTAS</th>
+                            <th>EXTRAÍDO</th>
+                            <th>DATA DE CADASTRO</th>
+                            <th>SLA</th>
+                            <th>TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (VivoMais.Repositorio.Entidades.AcessoTerceiros Acesso in Model.TerceirosAberto)
+                    {
+                        <tr class="odd gradeX">
+                                <td><input type="image" src="~/Imagens/Icones/Download.ico" onclick="DownloadTerceiros('@Acesso.Parceiro.Uf','@Acesso.Parceiro.Gestor');" style="margin-left: 30%;" width="35" height="35"></td>
+                                <td>@Acesso.Parceiro.Uf</td>
+                                <td>@Acesso.Parceiro.Gestor</td>
+                                <td>@Acesso.Extraido</td>
+
+                                @if (@Acesso.DataCadastro.ToString() != "01/01/0001 00:00:00")
+                            {
+                                <td>@Acesso.DataCadastro.ToString("dd/MM/yyyy")</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+
+
+                                <td>@Acesso.Sla</td>
+                                <td>@Acesso.Total</td>
+                            </tr>
+                    }
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>

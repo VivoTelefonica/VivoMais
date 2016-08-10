@@ -1,0 +1,706 @@
+﻿@using System.Collections
+@model VivoMais.Models.RetornoAcessoUsuarioViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/_Layout.cshtml";
+}
+
+<script type="text/javascript" src="~/Scripts/jquery-2.2.1.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script type="text/javascript" src="~/js/mascaras/Mascaras.js"></script>
+
+<script type="text/javascript">
+
+
+    function FuncSucesso() {
+        alert('Acesso liberado com Sucesso!');
+        window.location = '/Acesso/Index';
+    }
+
+    function FuncError() {
+        alert('Ocorreu um erro ao tentar processar sua solicitação!');
+    }
+
+    $(document).ready(function () {
+
+        $("#myForm").submit(function (e) {
+
+            $("#sbTwo option").prop("selected", "selected");
+
+        });
+
+        $("#myForm").submit(function (e) {
+
+            $("#DDLDdd2 option").prop("selected", "selected");
+
+        });
+
+        $('#campoSenha').hide();
+        $("#btnSolicitar").click(
+            function () {
+                $.get(function (data) {
+                    $('#loading').hide();
+                });
+            }
+        );
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        $("#DDLTipoDeAcesso").change(function () {
+            $("#DDLPerfil").empty();
+            $("#DDLUf").empty();
+            $("#DDLDddRede").empty();
+            $("#DDLDdd1").empty();
+            $("#DDLDdd2").empty();
+            $("#DDLDdd").empty();
+            $("#DDLLoja").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '/CadastroUsuario/ObterPerfil',
+                dataType: 'json',
+                data: { TipoDeAcesso: $("#DDLTipoDeAcesso").val() },
+
+                success: function (Perfil) {
+                    $("#DDLPerfil").append("<option value=''>SELECIONE</option>");
+                    $.each(Perfil, function (i, Perfil) {
+                        $("#DDLPerfil").append('<option>' + Perfil + '</option>');
+                        $("#loading").hide();
+                    });
+                },
+                error: function (ex) {
+                    alert('Ocorreu um erro ao tentar processar sua solicitação.' + ex);
+                }
+            });
+            return false;
+        });
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        $('.ADMINISTRATIVO').hide();
+        $('.LOJA').hide();
+        $('.SELLOUT').hide();
+        $('#camposEscondidos').hide();
+        $('#campoRede').hide();
+
+        $('#DDLTipoDeAcesso').change(function () {
+            if (this.value == "LOJA" || this.value == "VENDAS" || this.value == "ADMINISTRATIVO") {
+                $('#camposEscondidos').hide();
+                $('#campoRede').hide();
+                $('.LOJA').hide();
+                $('.SELLOUT').hide();
+                $('.ADMINISTRATIVO').hide();
+            }
+        });
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        $('#DDLPerfil').change(function () {
+
+            $("#DDLUf").empty();
+            $("#DDLDddRede").empty();
+            $("#DDLDdd1").empty();
+            $("#DDLDdd2").empty();
+            $("#DDLDdd").empty();
+            $("#DDLLoja").empty();
+
+            $('#loading').show();
+            $.ajax({
+                type: 'POST',
+                url: '/Parceiro/ObterUf',
+                dataType: 'json',
+
+                success: function (Uf) {
+                    $("#DDLUf").append("<option value=''>SELECIONE</option>");
+                    $.each(Uf, function (i, Uf) {
+                        $("#DDLUf").append('<option>' + Uf + '</option>');
+                        $("#loading").hide();
+                    });
+                },
+                error: function (ex) {
+                    alert('Ocorreu um erro ao tentar processar sua solicitação.' + ex);
+                    $("#loading").hide();
+                }
+            });
+
+            if (this.value == "MARKETING TERRITORIAL" || this.value == "TERRITORIAL" || this.value == "GERENTE DDD") {
+                $('#camposEscondidos').show();
+                $('#UF').show();
+                $('#DDD1').show();
+                $('#DDDRede').hide();
+                $('#DDDList').hide();
+                $('#LOJA').hide();
+                $('#campoRedeList').hide();
+                $('#campoSenha').hide();
+
+            } else if (this.value == "SUPORTE") {
+                $('#camposEscondidos').hide();
+                $('#UF').hide();
+                $('#DDD1').hide();
+                $('#DDDRede').hide();
+                $('#campoRedeList').hide();
+                $('#DDDList').hide();
+                $('#LOJA').hide();
+                $('#campoSenha').hide();
+
+            } else if (this.value == "GERENTE GERAL - LLPP" || this.value == "GERENTE DE NEGÓCIO-LLPP") {
+                $('#camposEscondidos').show();
+                $('#UF').show();
+                $('#DDD1').show();
+                $('#LOJA').show();
+                $('#DDDList').hide();
+                $('#DDDRede').hide();
+                $('#campoRedeList').hide();
+                $('#campoSenha').hide();
+
+            } else if (this.value == "SELL IN") {
+                $('#camposEscondidos').show();
+                $('#UF').show();
+                $('#DDDRede').show();
+                $('#campoRedeList').show();
+                $('#DDDList').hide();
+                $('#DDD1').hide();
+                $('#LOJA').hide();
+                $('#campoSenha').hide();
+
+            } else {
+                $('#camposEscondidos').hide();
+                $('#UF').hide();
+                $('#DDD1').hide();
+                $('#DDDRede').hide();
+                $('#campoRedeList').hide();
+                $('#DDDList').hide();
+                $('#LOJA').hide();
+                $('#campoSenha').hide();
+            }
+        });
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        $("#txtLogin").change(function () {
+            $("#loading").show();
+            $.ajax({
+                dataType: "json",
+                type: 'GET',
+                url: '/CadastroUsuario/obterDadosUsuario',
+                data: { Login: $("#txtLogin").val() },
+
+                success: function (CadastroUsuario) {
+                    $('#loading').hide();
+                    $(CadastroUsuario).each(function (i) {
+                        if (CadastroUsuario.Usuario != null) {
+
+                            $('#campoSenha').show();
+                            $('#txtNome').val(CadastroUsuario.Usuario.Nome);
+                            $('#txtEmail').val(CadastroUsuario.Usuario.Email);
+                            $('#DDLTipoDeAcesso').val(CadastroUsuario.Usuario.TipoAcesso);
+                            $("#DDLPerfil").append('<option value="' + CadastroUsuario.Usuario.Perfil + '">' + CadastroUsuario.Usuario.Perfil + '</option>');
+
+                            if (CadastroUsuario.Usuario.TipoAcesso == "LOJA") {
+                                $("#DDLPerfil").append("<option value=''>SELECIONE</option>");
+                                $("#DDLPerfil").append('<option value= GERENTE GERAL - LLPP"> GERENTE GERAL - LLPP</option>');
+                                $("#DDLPerfil").append('<option value= GERENTE DE NEGÓCIO - LLPP"> GERENTE DE NEGÓCIO - LLPP</option>');
+                            } else if (CadastroUsuario.Usuario.TipoAcesso == "VENDAS") {
+                                $("#DDLPerfil").append("<option value=''>SELECIONE</option>");
+                                $("#DDLPerfil").append('<option value="GERENTE DE CONTAS">GERENTE DE CONTAS</option>');
+                                $("#DDLPerfil").append('<option value="SELL IN">SELL IN</option>');
+                            } else if (CadastroUsuario.Usuario.TipoAcesso == "ADMINISTRATIVO") {
+                                $("#DDLPerfil").append("<option value=''>SELECIONE</option>");
+                                $("#DDLPerfil").append('<option value="SUPORTE">SUPORTE</option>');
+                                $("#DDLPerfil").append('<option value="MARKETING REGIONAL">MARKETING REGIONAL</option>');
+                                $("#DDLPerfil").append('<option value="MARKETING TERRITORIAL">MARKETING TERRITORIAL</option>');
+                                $("#DDLPerfil").append('<option value="TERRITORIAL">TERRITORIAL</option>');
+                                $("#DDLPerfil").append('<option value="GERENTE DDD">GERENTE DDD</option>');
+                            }
+
+                            if (CadastroUsuario.Usuario.Parceiro.Uf == "AL") {
+                                $("#DDLDdd").append("<option value=''>SELECIONE</option>");
+                                $("#DDLDdd").append('<option value=82>82</option>');
+                            }
+                            else if (CadastroUsuario.Usuario.Parceiro.Uf == "BA") {
+                                $("#DDLDdd").append("<option value=''>SELECIONE</option>");
+                                $("#DDLDdd").append('<option value=71>71</option>');
+                                $("#DDLDdd").append('<option value=73>73</option>');
+                                $("#DDLDdd").append('<option value=74>74</option>');
+                                $("#DDLDdd").append('<option value=75>75</option>');
+                                $("#DDLDdd").append('<option value=77>77</option>');
+                            }
+                            else if (CadastroUsuario.Usuario.Parceiro.Uf == "CE") {
+                                $("#DDLDdd").append('<option value="">SELECIONE</option>');
+                                $("#DDLDdd").append('<option value=85>85</option>');
+                                $("#DDLDdd").append('<option value=88>88</option>');
+                            }
+                            else if (CadastroUsuario.Usuario.Parceiro.Uf == "PB") {
+                                $("#DDLDdd").append('<option value="">SELECIONE</option>');
+                                $("#DDLDdd").append('<option value=83>83</option>');
+                            }
+                            else if (CadastroUsuario.Usuario.Parceiro.Uf == "PE") {
+                                $("#DDLDdd").append('<option value=""> SELECIONE</option>');
+                                $("#DDLDdd").append('<option value=81>81</option>');
+                                $("#DDLDdd").append('<option value=87>87</option>');
+                            }
+                            else if (CadastroUsuario.Usuario.Parceiro.Uf == "PI") {
+                                $("#DDLDdd").append('<option value="">SELECIONE</option>');
+                                $("#DDLDdd").append('<option value=86>86</option>');
+                                $("#DDLDdd").append('<option value=89>89</option>');
+                            }
+                            else if (CadastroUsuario.Usuario.Parceiro.Uf == "RN") {
+                                $("#DDLDdd").append('<option value="">SELECIONE</option>');
+                                $("#DDLDdd").append('<option value=84>84</option>');
+                            }
+                            else if (CadastroUsuario.Usuario.Parceiro.Uf == "SE") {
+                                $("#DDLDdd").append('<option value=""> SELECIONE</option>');
+                                $("#DDLDdd").append('<option value=79>79</option>');
+                            }
+
+                            if (CadastroUsuario.Usuario.Perfil == "SUPORTE") {
+                                if (CadastroUsuario.Usuario.Parceiro.Uf == "AL") {
+                                    $("#DDLDdd1").val('');
+                                    $("#DDLDdd1").empty();
+                                    $("#DDLDdd1").append('<option value=82>82</option>');
+                                }
+                                else if (CadastroUsuario.Usuario.Parceiro.Uf == "BA") {
+                                    $("#DDLDdd1 option").prop("remove", "remove");
+                                    $("#DDLDdd1").append('<option value=71>71</option>');
+                                    $("#DDLDdd1").append('<option value=73>73</option>');
+                                    $("#DDLDdd1").append('<option value=74>74</option>');
+                                    $("#DDLDdd1").append('<option value=75>75</option>');
+                                    $("#DDLDdd1").append('<option value=77>77</option>');
+                                }
+                                else if (CadastroUsuario.Usuario.Parceiro.Uf == "CE") {
+                                    $("#DDLDdd1 option").prop("remove", "remove");
+                                    $("#DDLDdd1").append('<option value=85>85</option>');
+                                    $("#DDLDdd1").append('<option value=88>88</option>');
+                                }
+                                else if (CadastroUsuario.Usuario.Parceiro.Uf == "PB") {
+                                    $("#DDLDdd1 option").prop("remove", "remove");
+                                    $("#DDLDdd1").append('<option value=83>83</option>');
+                                }
+                                else if (CadastroUsuario.Usuario.Parceiro.Uf == "PE") {
+                                    $("#DDLDdd1 option").prop("remove", "remove");
+                                    $("#DDLDdd1").append('<option value=81>81</option>');
+                                    $("#DDLDdd1").append('<option value=87>87</option>');
+                                }
+                                else if (CadastroUsuario.Usuario.Parceiro.Uf == "PI") {
+                                    $("#DDLDdd1 option").prop("remove", "remove");
+                                    $("#DDLDdd1").append('<option value= 86>86</option>');
+                                    $("#DDLDdd1").append('<option value= 89>89</option>');
+                                }
+                                else if (CadastroUsuario.Usuario.Parceiro.Uf == "RN") {
+                                    $("#DDLDdd1 option").prop("remove", "remove");
+                                    $("#DDLDdd1").append('<option value= 84>84</option>');
+                                }
+                                else if (CadastroUsuario.Usuario.Parceiro.Uf == "SE") {
+                                    $("#DDLDdd1 option").prop("remove", "remove");
+                                    $("#DDLDdd1").append('<option value= 79>79</option>');
+                                }
+                            }
+
+                            if (CadastroUsuario.Usuario.Perfil == "MARKETING TERRITORIAL" || CadastroUsuario.Usuario.Perfil == "TERRITORIAL" || CadastroUsuario.Usuario.Perfil == "GERENTE DDD") {
+                                $('#camposEscondidos').show();
+                                $('#UF').show();
+                                $('#DDLUf').val(CadastroUsuario.Usuario.Parceiro.Uf);
+                                $('#DDD1').show();
+                                $("#DDLDdd").append('<option value="' + CadastroUsuario.Usuario.Parceiro.Ddd + '">' + CadastroUsuario.Usuario.Parceiro.Ddd + '</option>');
+                                $('#loading').hide();
+                                $('#DDDRede').hide();
+                                $('#DDDList').hide();
+                                $('#LOJA').hide();
+                                $('#campoRedeList').hide();
+
+                            } else if (CadastroUsuario.Usuario.Perfil == "SUPORTE") {
+                                $('#camposEscondidos').show();
+                                $('#UF').show();
+                                $('#DDLUf').val(CadastroUsuario.Usuario.Parceiro.Uf);
+                                $('#DDDList').show();
+                                $('#DDD1').hide();
+                                $(CadastroUsuario.DddUsuario).each(function (i, DddUsuario) {
+                                    $("#DDLDdd2").append('<option>' + DddUsuario + '</option>');
+                                });
+
+                                $('#LOJA').hide();
+                                $('#campoRedeList').hide();
+                                $('#DDDRede').hide();
+
+                            } else if (CadastroUsuario.Usuario.Perfil == "GERENTE GERAL - LLPP" || CadastroUsuario.Usuario.Perfil == "GERENTE DE NEGÓCIO-LLPP") {
+                                $('#camposEscondidos').show();
+                                $('#UF').show();
+                                $('#DDLUf').val(CadastroUsuario.Usuario.Parceiro.Uf);
+                                $('#DDD1').show();
+                                $("#DDLDdd").append('<option value="' + CadastroUsuario.DddUsuario + '">' + CadastroUsuario.DddUsuario + '</option>');
+                                $('#LOJA').show();
+                                $("#DDLLoja").append('<option value="' + CadastroUsuario.Usuario.Parceiro.Canal + '">' + CadastroUsuario.Usuario.Parceiro.Canal + '</option>');
+                                $('#DDDList').hide();
+                                $('#DDDRede').hide();
+                                $('#campoRedeList').hide();
+
+                            } else if (CadastroUsuario.Usuario.Perfil == "SELL IN") {
+                                $('#camposEscondidos').show();
+                                $('#UF').show();
+                                $('#DDLUf').val(CadastroUsuario.Usuario.Parceiro.Uf);
+                                $('#DDD1').hide();
+                                $('#DDDRede').show();
+                                $("#DDDRede").append('<option value="' + CadastroUsuario.Usuario.Parceiro.Ddd + '">' + CadastroUsuario.Usuario.Parceiro.Ddd + '</option>');
+                                $('#campoRedeList').show();
+
+                                $(CadastroUsuario.RedePorDDD).each(function (i, RedePorDDD) {
+                                    $("#sbOne").append('<option>' + RedePorDDD + '</option>');
+                                });
+                                $(CadastroUsuario.RedeSellIn).each(function (i, RedeSellIn) {
+                                    $("#sbTwo").append('<option>' + RedeSellIn + '</option>');
+                                });
+
+                                $('#DDDList').hide();
+                                $('#LOJA').hide();
+                            }
+
+                        } else {
+                            $('#txtNome').val('');
+                            $('#txtEmail').val('');
+                            $('#camposEscondidos').hide();
+                            $('#UF').hide();
+                            $('#DDD1').hide();
+                            $('#DDDRede').hide();
+                            $('#campoRedeList').hide();
+                            $('#campoSenha').hide();
+                            $('#DDDList').hide();
+                            $('#LOJA').hide();
+                        }
+                    })
+                },
+
+                error: function (ex) {
+                    $('#loading').hide();
+                    $('#txtNome').val('');
+                    $('#txtEmail').val('');
+                    $('#camposEscondidos').hide();
+                    $('#UF').hide();
+                    $('#DDD1').hide();
+                    $('#campoRedeList').hide();
+                    $('#DDDList').hide();
+                    $('#LOJA').hide();
+                    $("#DDLUf").empty;
+                    $("#DDLDdd").empty();
+                    $("#DDLLoja").empty();
+
+                }
+            });
+
+        });
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        $("#DDLUf").change(function () {
+            $("#DDLRede").empty();
+            $("#loading").show();
+            $("#DDLDdd1").empty();
+            $("#DDLDdd").empty();
+            $("#DDLDddRede").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '/Parceiro/ObterDddPorUf',
+                dataType: 'json',
+                data: { Uf: $("#DDLUf").val() },
+
+                success: function (Ddd) {
+
+                    $("#DDLDdd").append("<option value=''>SELECIONE</option>");
+                    $("#DDLDddRede").append("<option value=''>SELECIONE</option>");
+
+                    $.each(Ddd, function (i, Ddd) {
+
+                        if ($("#DDLPerfil").val() == "SUPORTE") {
+                            $("#DDLDdd1").append('<option>' + Ddd + '</option>');
+                            $('#loading').hide();
+                        }
+                        else if ($("#DDLPerfil").val() == "SELL IN") {
+                            $("#DDLDddRede").append('<option>' + Ddd + '</option>');
+                            $('#loading').hide();
+                        }
+                        else
+                        {
+                            $("#DDLDdd").append('<option value="' + Ddd + '">' + Ddd + '</option>');
+                            $('#loading').hide();
+                        }
+                        
+
+                    });
+                }
+            });
+            return false;
+        });
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        $("#DDLDdd").change(function () {
+            $("#loading").show();
+            $.ajax({
+                dataType: "json",
+                type: 'GET',
+                url: '/CadastroUsuario/buscarLoja',
+                data: { DDD: $("#DDLDdd").val() },
+
+                success: function (Parceiro) {
+                    $("#DDLLoja").empty();
+                    $("#DDLLoja").append("<option value=''>SELECIONE</option>");
+                    $.each(Parceiro, function (i, Parceiro) {
+                        $("#DDLLoja").append('<option>' + Parceiro.NomeFantasia + '</option>');
+                        $('#loading').hide();
+                    });
+                },
+                error: function (ex) {
+                    $('#loading').hide();
+                }
+            });
+        });
+
+        $("#DDLDddRede").change(function () {
+            $("#DDLRede").empty();
+
+            $("#loading").show();
+            $.ajax({
+                type: 'POST',
+                url: '/Parceiro/ObterParceirosRedeVarejo',
+                dataType: 'json',
+                data: { Ddd: $("#DDLDddRede").val() },
+
+                success: function (REDE) {
+                    $("#sbOne").empty();
+                    $("#sbTwo").empty();
+                    $.each(REDE, function (i, REDE) {
+                        $("#sbOne").append('<option>' + REDE + '</option>');
+                        $('#loading').hide();
+                    });
+                },
+                error: function (ex) {
+                    alert('Ocorreu um erro ao tentar processar sua solicitação.' + ex);
+                }
+            });
+        });
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        $(function () {
+
+            function moveItemsDDD(origin, dest) {
+                $(origin).find(':selected').appendTo(dest);
+            }
+
+            function moveAllItems(origin, dest) {
+                $(origin).children().appendTo(dest);
+            }
+
+            $('#left').click(function () {
+                moveItemsDDD('#DDLDdd2', '#DDLDdd1');
+            });
+
+            $('#right').on('click', function () {
+                moveItemsDDD('#DDLDdd1', '#DDLDdd2');
+            });
+        });
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        $(function () {
+
+            function moveItemsREDE(origin, dest) {
+                $(origin).find(':selected').appendTo(dest);
+            }
+
+            function moveAllItems(origin, dest) {
+                $(origin).children().appendTo(dest);
+            }
+
+            $('#left2').click(function () {
+                moveItemsREDE('#sbTwo', '#sbOne');
+            });
+
+            $('#right2').on('click', function () {
+                moveItemsREDE('#sbOne', '#sbTwo');
+            });
+        });
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    });
+
+</script>
+
+
+<div class="panel-body">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">Cadastro de Usuário</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+
+                @using (Ajax.BeginForm("transacaoUsuario", "CadastroUsuario", null, new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "feedback", HttpMethod = "Post", OnSuccess = "FuncSucesso", OnFailure = "FuncError" }, new { @id = "myForm", enctype = "multipart/form-data" }))
+                {
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <label>REGIONAL:</label>
+                            @Html.DropDownListFor(x => x.Parceiro.Regional, new SelectList(new List<string> { "NE" }), new { @id = "DDLRegional", @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.Parceiro.Regional, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-sm-11">
+                            <label>LOGIN: </label>
+                            @Html.TextBoxFor(x => x.Usuario.Login, new { @id = "txtLogin", @class = "form-control", placeholder = "LOGIN", style = "width: 15%" })
+                            @Html.ValidationMessageFor(x => x.Usuario.Login, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    
+                    <br />
+
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label>SENHA: </label>
+                            @Html.PasswordFor(x => x.Usuario.Senha, new { @id = "txtSenha", @class = "form-control", placeholder = "SENHA" })
+                            @Html.ValidationMessageFor(x => x.Usuario.Senha, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-sm-10">
+                            <label>CONFIRMAR SENHA: </label>
+                            @Html.PasswordFor(x => x.Usuario.ConfirmarSenha, new { @id = "txtConfirmarSenha", @class = "form-control", style = "width: 22%", placeholder = "CONFIRMAR SENHA" })
+                            @Html.ValidationMessageFor(x => x.Usuario.ConfirmarSenha, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <br />
+
+
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <label>NOME: </label>
+                            @Html.TextBoxFor(x => x.Usuario.Nome, new { @id = "txtNome", @class = "form-control", style = "width: 100%", placeholder = "NOME" })
+                            @Html.ValidationMessageFor(x => x.Usuario.Nome, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-sm-7">
+                            <label>EMAIL: </label>
+                            @Html.TextBoxFor(x => x.Usuario.Email, new { @id = "txtEmail", @class = "form-control", style = "width: 50%", @placeholder = "nome@email.com" })
+                            @Html.ValidationMessageFor(x => x.Usuario.Email, "", new { @class = "text-danger" })
+                            <br />
+                        </div>
+                    </div>
+
+                    @*<div class="row">
+                        <div class="col-sm-12">
+                            <label>IMAGE DE PERFIL: </label>
+                            <input type="file" class="form-control" name="UploadedFile" style="width:40%" />
+                        </div>
+                    </div>*@
+
+
+        <div class="row">
+            <div class="col-sm-3">
+                <label>TIPO DE ACESSO:</label>
+                @Html.DropDownListFor(x => x.Usuario.TipoAcesso, new List<SelectListItem>
+                                       {
+                                           new SelectListItem{ Text="LOJA", Value="LOJA" },
+                                           new SelectListItem{ Text="VENDAS", Value="VENDAS"},
+                                           new SelectListItem{ Text="ADMINISTRATIVO", Value="ADMINISTRATIVO"},
+                                       }, "SELECIONE", new { @id = "DDLTipoDeAcesso", @class = "form-control", style = "width: 100%" })
+                @Html.ValidationMessageFor(x => x.Usuario.TipoAcesso, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-sm-9">
+                <label>PERFIL:</label>
+                @Html.DropDownListFor(x => x.Usuario.Perfil, new SelectList(string.Empty), new { @id = "DDLPerfil", @class = "form-control", style = "width: 50%" })
+                @Html.ValidationMessageFor(x => x.Usuario.Perfil, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <br />
+
+        @*<div class="row">*@
+        <div id="camposEscondidos">
+            <div class="row" id="ADMINISTRATIVO">
+                <div class="col-sm-2" id="UF">
+                    <label>UF:</label>
+                    @Html.DropDownListFor(x => x.Parceiro.Uf, new SelectList((IEnumerable)ViewData["UF"]), "SELECIONE", new { @id = "DDLUf", @class = "form-control", style = "width: 100%" })
+                    @Html.ValidationMessageFor(x => x.Parceiro.Uf, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-8" id="DDD1">
+                    <label>DDD:</label>
+                    @Html.DropDownListFor(x => x.Parceiro.Ddd, new SelectList(string.Empty), new { @id = "DDLDdd", @class = "form-control", style = "width: 20%" })
+                    @Html.ValidationMessageFor(x => x.Parceiro.Ddd, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-8" id="DDDRede">
+                    <label>DDD:</label>
+                    @Html.DropDownListFor(x => x.ParceiroSellIn.Ddd, new SelectList(string.Empty), new { @id = "DDLDddRede", @class = "form-control", style = "width: 20%" })
+                    @Html.ValidationMessageFor(x => x.ParceiroSellIn.Ddd, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <br />
+
+            <div class="row" id="DDDList">
+                <div class="col-sm-2" id="DDDList1">
+                    <label>DDD:</label>
+                    @Html.ListBoxFor(x => x.Usuario.DDDs, new SelectList(string.Empty), new { @id = "DDLDdd1", @class = "form-control", @style = "widht:20%" })
+                </div>
+                <div class="col-sm-1" id="DDDList2">
+                    <br />
+                    <input id="right" class="btn btn-primary" type="button" value=">>" style="width: 100%" />
+                    <input id="left" class="btn btn-primary" type="button" value="<<" style="width: 100%" />
+                </div>
+                <div class="col-sm-2" id="DDDList3">
+                    <br />
+                    @Html.ListBoxFor(x => x.ListaDDDUsuario, new SelectList(string.Empty), new { @id = "DDLDdd2", @class = "form-control", style = "widht:5%" })
+                    @Html.ValidationMessageFor(x => x.ListaDDDUsuario, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-sm-12" id="LOJA">
+                    <label>LOJA:</label>
+                    @Html.DropDownListFor(x => x.Parceiro.Rede, new SelectList(string.Empty), new { @id = "DDLLoja", @class = "form-control", style = "width: 20%" })
+                    @Html.ValidationMessageFor(x => x.Parceiro.Rede, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <br />
+
+            <div class="row" id="campoRedeList">
+                <div class="col-sm-4" id="campoRedeList1">
+                    <label>REDE:</label>
+                    @Html.ListBoxFor(x => x.RedePorDDD, new SelectList(string.Empty), new { @id = "sbOne", @class = "form-control", @style = "widht:20%" })
+                </div>
+                <div class="col-sm-1" id="campoRedeList2">
+                    <br />
+                    <input id="right2" class="btn btn-primary" type="button" value=">>" style="width: 100%" />
+                    <input id="left2" class="btn btn-primary" type="button" value="<<" style="width: 100%" />
+                </div>
+                <div class="col-sm-4" id="campoRedeList3">
+                    <br />
+                    @Html.ListBoxFor(x => x.RedeSellIn, new SelectList(String.Empty), new { @id = "sbTwo", @class = "form-control", @style = "widht:20%" })
+                </div>
+            </div>
+        </div>
+        @*</div>*@
+
+        <br />
+
+        <div class="row">
+            <div class="col-sm-12">
+                <input id="btnSolicitar" class="btn btn-primary" type="submit" style="width:150px" value="Solicitar" />
+            </div>
+        </div>
+
+        }
+
+    </div>
+        </div>
+    </div>
+</div>
+
+

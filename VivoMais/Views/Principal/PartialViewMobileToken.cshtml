@@ -1,0 +1,99 @@
+﻿@model VivoMais.Models.PrincipalViewModel
+
+
+
+
+<script type="text/javascript">
+    function AtualizarMobileToken(Id) {
+        if (confirm("Tem certeza que colaborador está cadastrado no Mobile Token? Caso contrário a solicitação será REJEITADA."))
+        {
+            $("#loading").show();
+            var checked = [];
+            var i = 0;
+
+            var oTable = $('#TableToken').DataTable();
+
+                //.DataTable({ bHeader: false });
+            
+            var rowcollection = oTable.$("input[type='checkbox']:checked", { "page": "all" });
+
+            rowcollection.each(function (index, elem) {
+                var checkbox_value = $(elem).val();
+
+                checked[i] = [checkbox_value];
+                i = i + 1;
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '/Principal/AtualizarMobileToken',
+                dataType: 'json',
+                data: { ArrayCk: checked },
+
+                success: function (returnValue) {
+                    alert('Tokens cadastrado!. Em Breve você receberá um e-mail com os Logins e Senhas');
+                    window.location.href = '/Principal/Index';
+                    $('#loading').hide();
+                },
+                failure: function (returnValue) {
+                    $('#loading').hide();
+                },
+                error: function (ex) {
+                    alert('Ocorreu um erro ao tentar processar sua solicitação.' + ex);
+                    $('#loading').hide();
+                }
+            });
+        }
+    }
+</script>
+
+<!-- page content -->
+
+
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title" id="myModalLabel">Mobile Token</h4>
+    <a id="btnAtualizar" onclick="AtualizarMobileToken()" style="width:150px" href="#" class="btn btn-primary pull-right"><span class="fa fa-check-square-o"></span> Atualizar</a>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_content">
+                <div class="table-responsive">
+                    <table class="table table-striped jambo_table bulk_action" id="TableToken">
+                        <thead>
+                            <tr class="headings">
+                                <th class="column-title">Token </th>
+                                <th class="column-title">Nome </th>
+                                <th class="column-title">Perfil </th>
+                                <th class="column-title">Função </th>
+                                <th class="column-title">Data de Solicitação </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @if (Model != null)
+                            {
+                                foreach (VivoMais.Repositorio.Entidades.AcessoTerceiros Acesso in Model.Acesso)
+                                {
+                                    <tr class="even pointer">
+                                        <td class="a-center ">
+                                            <input type="checkbox" value="@Acesso.Id" class="flat">
+                                        </td>
+                                        <td>@Acesso.Nome</td>
+                                        <td>@Acesso.Perfil</td>
+                                        <td>@Acesso.Funcao</td>
+                                        <td>@Acesso.DataCadastro</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

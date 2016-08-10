@@ -1,0 +1,5 @@
+C:\Users\andre\Documents\Visual Studio 2013\Projects\VivoMais\VivoMais.Repositorio\bin\VivoMais.Repositorio.dll.config
+C:\Users\andre\Documents\Visual Studio 2013\Projects\VivoMais\VivoMais.Repositorio\bin\VivoMais.Repositorio.dll
+C:\Users\andre\Documents\Visual Studio 2013\Projects\VivoMais\VivoMais.Repositorio\bin\VivoMais.Repositorio.pdb
+C:\Users\andre\Documents\Visual Studio 2013\Projects\VivoMais\VivoMais.Repositorio\obj\Debug\VivoMais.Repositorio.dll
+C:\Users\andre\Documents\Visual Studio 2013\Projects\VivoMais\VivoMais.Repositorio\obj\Debug\VivoMais.Repositorio.pdb

@@ -1,0 +1,95 @@
+﻿@model VivoMais.Models.AcaoMarketingViewModel
+@{
+    ViewBag.Title = "ConsultarAcao";
+    if (Session["TipoMenu"].ToString() != "")
+    {
+        Layout = Session["TipoMenu"].ToString();
+    }
+    else
+    {
+        Session.Clear();
+        Session.Abandon();
+        FormsAuthentication.SignOut();
+        Response.Redirect("/Acesso/Index");
+    }
+}
+
+@* Javascript *@
+<script type="text/javascript" src="~/Scripts/jquery-1.8.0.js"></script>
+<script type="text/javascript" src="~/Scripts/ajax.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">Consultar Ações</h3>
+    </div>
+</div>
+<div class="panel-body">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                @using (Ajax.BeginForm("ConsultarAcaoPartView", "AcaoMarketing", new AjaxOptions
+                              {
+                                  HttpMethod = "Post",
+                                  UpdateTargetId = "dvResultado"
+                              }, new { @id = "formID" }))
+                {
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>REDE:</label>
+                            @Html.DropDownListFor(x => x.AcaoMarketing.Parceiro.Rede, new SelectList((System.Collections.IEnumerable)ViewData["REDE"]), "SELECIONE", new { @id = "DDLRede", @class = "form-control", style = "width: 60%" })
+                            @Html.ValidationMessageFor(x => x.AcaoMarketing.Parceiro.Rede, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>STATUS:</label>
+                            @Html.DropDownListFor(x => x.AcaoMarketing.Status.Descricao, new List<SelectListItem>
+                                                                       {
+                                                                           new SelectListItem{ Text="AGUARDANDO VALIDAÇÃO DO MARKETING TERRITORIAL"},
+                                                                           new SelectListItem{ Text="AGUARDANDO VALIDAÇÃO DO MARKETING"},
+                                                                           new SelectListItem{ Text="APROVADA"},
+                                                                           new SelectListItem{ Text="CANCELADO"},
+                                                                           new SelectListItem{ Text="DEVOLVIDO AO GERENTE DE CONTAS"},
+                                                                           new SelectListItem{ Text="EXECUTADA"},
+                                                                           new SelectListItem{ Text="EXCLUIDO"},
+                                                                           new SelectListItem{ Text="TODOS"}
+
+                                                                       }, "SELECIONE"
+                                                                       , new { @id = "DDLStatus", @class = "form-control", style = "width: 40%" })
+                            @Html.ValidationMessageFor(x => x.AcaoMarketing.Status.Descricao, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>MÊS DA AÇÃO:</label>
+                            @Html.DropDownListFor(x => x.AcaoMarketing.MesAcao, new SelectList((System.Collections.IEnumerable)ViewData["MES"]), "SELECIONE", new { @id = "DDLMesAcao", @class = "form-control", style = "width: 15%" })
+                            @Html.ValidationMessageFor(x => x.AcaoMarketing.MesAcao, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input id="btnConsultar" class="btn btn-primary" style="width:150px" type="submit" value="Consultar" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="dvResultado">
+                @{
+                    Html.RenderPartial("PartialViewConsultarAcao");
+                }
+            </div>
+        </div>
+    </div>
+
+</div>
+

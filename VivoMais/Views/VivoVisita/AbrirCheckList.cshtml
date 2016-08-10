@@ -1,0 +1,128 @@
+﻿@model VivoMais.Models.VivoVisitaViewModel
+@{
+    ViewBag.Title = "Vivo Visita";
+    if (Session["TipoMenu"].ToString() != "")
+    {
+        Layout = Session["TipoMenu"].ToString();
+    }
+    else
+    {
+        Session.Clear();
+        Session.Abandon();
+        FormsAuthentication.SignOut();
+        Response.Redirect("/Acesso/Index");
+    }
+}
+
+<script type="text/javascript" src="~/Scripts/jquery-1.8.0.js"></script>
+<script type="text/javascript" src="~/Scripts/ajax.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#btnAbrirVisita").click(
+            function () {
+                $("#loading").show();
+                $.get(function (data) {
+                    $('#loading').hide();
+                });
+            }
+        );
+
+        $("#DDLDdd").change(function () {
+            $("#DDLLoja").empty();
+            $("#loading").show();
+
+            $.ajax({
+                type: 'POST',
+                url: '/Parceiro/ObterParceirosRedeLLPP',
+                dataType: 'json',
+                data: { Ddd: $("#DDLDdd").val() },
+
+                success: function (Loja) {
+                    $("#DDLLoja").append("<option value=''>SELECIONE</option>");
+                    $.each(Loja, function (i, Loja) {
+                        $("#DDLLoja").append('<option value="' + Loja + '">' + Loja + '</option>');
+                        $('#loading').hide();
+                    });
+                },
+                error: function (ex) {
+                    alert('Ocorreu um erro ao tentar processar sua solicitação.' + ex);
+                }
+            });
+            return false;
+        });
+
+        $("#txtDataVisita").datepicker({
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
+            dayNamesMin: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+        });
+
+
+    });
+
+</script>
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">Abrir Visita</h3>
+    </div>
+</div>
+<div class="panel-body">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+
+                @using (Html.BeginForm("AbrirVisita", "VivoVisita"))
+                {
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label>DDD:</label>
+                            @Html.DropDownListFor(x => x.Passagem.Parceiro.Ddd, new SelectList((System.Collections.IEnumerable)ViewData["DDD"]), "SELECIONE", new { @id = "DDLDdd", @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.Passagem.Parceiro.Ddd, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-sm-10">
+                            <label>LOJA:</label>
+                            @Html.DropDownListFor(x => x.Passagem.Parceiro.Rede, new SelectList(string.Empty), "SELECIONE", new { @id = "DDLLoja", @class = "form-control", style = "width: 70%" })
+                            @Html.ValidationMessageFor(x => x.Passagem.Parceiro.Rede, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>TIPO DE ABERTURA:</label>
+                            @Html.DropDownListFor(x => x.Passagem.TipoAbertura, new SelectList(new List<string> { "PASSAGEM DE LOJA","STAFF CANAL E TERRITÓRIO" }), "SELECIONE", new { @id = "DDLTipoAbertura", @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.Passagem.TipoAbertura, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-sm-9">
+                            <label>DATA DA VISITA:</label>
+                            @Html.TextBoxFor(x => x.Passagem.Data, new { @id = "txtDataVisita", @class = "form-control", style = "width: 15%" })
+                            @Html.ValidationMessageFor(x => x.Passagem.Data, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>DESCRIÇÃO DA VISITA:</label>
+                            @Html.TextAreaFor(x => x.Passagem.Descricao, new { @class = "form-control", rows = 7 })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input id="btnAbrirVisita" class="btn btn-primary" style="width:150px" type="submit" value="Abrir Visita" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

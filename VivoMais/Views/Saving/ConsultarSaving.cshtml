@@ -1,0 +1,71 @@
+﻿@model VivoMais.Models.SavingViewModel
+@{
+    ViewBag.Title = "ConsultarSaving";
+    if (Session["TipoMenu"].ToString() != "")
+    {
+        Layout = Session["TipoMenu"].ToString();
+    }
+    else
+    {
+        Session.Clear();
+        Session.Abandon();
+        FormsAuthentication.SignOut();
+        Response.Redirect("/Acesso/Index");
+    }
+}
+
+@* Javascript *@
+<script type="text/javascript" src="~/Acesso/Js/jquery-2.2.1.js"></script>
+<script type="text/javascript" src="~/js/dataTables/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="~/js/dataTables/dataTables.tableTools.js"></script>
+<script type="text/javascript" src="~/js/dataTables/dataTables.bootstrap.min.js"></script>
+
+
+
+
+<div class="panel-body">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">Consulta Saving</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+
+                @using (Ajax.BeginForm("ObterListaSaving", "Saving", new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "PartialConsultarSaving", }, new { @id = "formID" }))
+                {
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>MÊS DA AÇÃO:</label>
+                            @Html.DropDownListFor(x => x.saving.MesAcao, new SelectList((System.Collections.IEnumerable)ViewData["MES"]), "SELECIONE", new { @id = "DDLMesAcao", @class = "form-control", style = "width: 15%" })
+                            @Html.ValidationMessageFor(x => x.saving.MesAcao, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input id="btnSolicitar" class="btn btn-primary" style="width:150px" type="submit" value="Buscar" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="PartialConsultarSaving">
+                @{
+                    Html.RenderPartial("PartialViewConsultarSaving");
+                }
+            </div>
+        </div>
+    </div>
+
+</div>
+
+

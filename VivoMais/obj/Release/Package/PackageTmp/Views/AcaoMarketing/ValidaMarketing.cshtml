@@ -1,0 +1,255 @@
+﻿@model VivoMais.Models.AcaoMarketingViewModel
+@{
+    ViewBag.Title = "ValidaMarketing";
+    if (Session["TipoMenu"].ToString() != "")
+    {
+        Layout = Session["TipoMenu"].ToString();
+    }
+    else
+    {
+        Session.Clear();
+        Session.Abandon();
+        FormsAuthentication.SignOut();
+        Response.Redirect("/Acesso/Index");
+    }
+}
+
+@* Javascript *@
+<script type="text/javascript" src="~/Scripts/jquery-1.8.0.js"></script>
+<script type="text/javascript" src="~/Scripts/ajax.js"></script>
+<script type="text/javascript" src="~/js/moment/moment.min.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#example').dataTable({
+
+            //dom: 'T<"clear">lfrtip',
+            dom:
+             "<'row'<'col-sm-6'l><'col-sm-6'f>>R" +
+             "<'row'<'col-sm-12'tr>>" +
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            order: [[1, "desc"]],
+            bHeader: true,
+        });
+    });
+
+    function AtualizarStatus(xStatus) {
+        $.ajax({
+            type: 'POST',
+            url: '/AcaoMarketing/AtualizarStatusAcao',
+            dataType: 'json',
+            data: {
+                Status: xStatus,
+                Id: $("#txtId").val()
+            },
+            success: function (response) {
+                $("#loading").hide();
+                alert('Ação Atualizada com Sucesso!');
+                window.location.href = '/AcaoMarketing/ValidaMarketing/';
+            },
+            error: function (response) {
+                alert("error!");
+                $("#loading").hide();
+
+            }
+        });
+    }
+
+    function PreencherDias(DataIni, DataFim) {
+        moment.locale('pt-BR');
+
+        var DtIni = moment(DataIni, 'DD/MM/YYYY');
+        var DtFim = moment(DataFim, 'DD/MM/YYYY');
+
+        if (!((DtIni == "") || (DtFim == ""))) {
+            var dt = new Date(DtIni);
+            for (var contL = 0; contL < 31; contL++) {
+                var la = contL + 1;
+
+                $('#Label' + la).text(DtIni.format('DD') + '/' + DtIni.format('MM') + ":");
+
+                DtIni = DtIni.add(1, 'days');
+            }
+        }
+    }
+
+    function RetornarAcao(xId) {
+        $.ajax({
+            url: '/AcaoMarketing/RetornaAcaoIDPartialView/' + xId,
+            type: 'GET',
+            dataType: 'html',
+            cache: false,
+            success: function (response) {
+                $('#DivPartialViewAtualizacao').html(response);
+            },
+            failure: function (response) {
+                alert("error!");
+            },
+            error: function (response) {
+                alert("error!");
+            }
+        });
+    }
+
+    //function RetornarAcao(id) {
+    //    $("#loading").show();
+    //    $.ajax({
+    //        type: 'POST',
+    //        url: '/AcaoMarketing/RetornaAcaoID',
+    //        dataType: 'json',
+    //        data: { Id: id },
+    //        success: function (response) {
+    //            $("#loading").hide();
+
+    //            $('#txtId').val(response.Id);
+    //            $('#txtProtocolo').val(response.Protocolo);
+
+    //            $('#txtMesAcao').val(response.MesAcao);
+    //            $('#txtRegional').val(response.Parceiro.Regional);
+
+    //            $('#txtUf').val(response.Parceiro.Uf);
+    //            $('#txtDdd').val(response.Parceiro.Ddd);
+
+    //            $('#txtRede').val(response.Parceiro.Rede);
+    //            $('#txtVendedor').val(response.Parceiro.Vendedor);
+
+    //            $('#txtRazaoSocial').val(response.Parceiro.RazaoSocial);
+    //            $('#txtCanal').val(response.Parceiro.Canal);
+    //            $('#txtIxos').val(response.Parceiro.Ixos);
+
+    //            $('#txtNomeContatoRede').val(response.NomeContatoRede);
+    //            $('#txtTelefoneContatoRede').val(response.TelefoneContatoRede);
+    //            $('#txtEmailContatoRede').val(response.EmailContatoRede);
+
+    //            $('#txtTipoMidia').val(response.Midia.Midia);
+    //            $('#txtMidiaDetalhada').val(response.MidiaDetalhada.MidiaDetalhada);
+    //            $('#txtCampanhaMacro').val(response.CampanhaMacro);
+
+    //            $('#txtFocoPrincipal').val(response.FocoPrincipal);
+    //            $('#txtFormatoMaterial').val(response.FormatoMaterial);
+    //            $('#txtVeiculo').val(response.Veiculo);
+
+    //            $('#txtDescricaoAcao').val(response.DescricaoAcao);
+    //            $('#txtQtdPecas').val(response.QtdAcoes);
+
+    //            $('#txt1').val(response.Dia1);
+    //            $('#txt2').val(response.Dia2);
+    //            $('#txt3').val(response.Dia3);
+    //            $('#txt4').val(response.Dia4);
+    //            $('#txt5').val(response.Dia5);
+    //            $('#txt6').val(response.Dia6);
+    //            $('#txt7').val(response.Dia7);
+    //            $('#txt8').val(response.Dia8);
+    //            $('#txt9').val(response.Dia9);
+    //            $('#txt10').val(response.Dia10);
+    //            $('#txt11').val(response.Dia11);
+    //            $('#txt12').val(response.Dia12);
+    //            $('#txt13').val(response.Dia13);
+    //            $('#txt14').val(response.Dia14);
+    //            $('#txt15').val(response.Dia15);
+    //            $('#txt16').val(response.Dia16);
+    //            $('#txt17').val(response.Dia17);
+    //            $('#txt18').val(response.Dia18);
+    //            $('#txt19').val(response.Dia19);
+    //            $('#txt20').val(response.Dia20);
+    //            $('#txt21').val(response.Dia21);
+    //            $('#txt22').val(response.Dia22);
+    //            $('#txt23').val(response.Dia23);
+    //            $('#txt24').val(response.Dia24);
+    //            $('#txt25').val(response.Dia25);
+    //            $('#txt26').val(response.Dia26);
+    //            $('#txt27').val(response.Dia27);
+    //            $('#txt28').val(response.Dia28);
+    //            $('#txt29').val(response.Dia29);
+    //            $('#txt30').val(response.Dia30);
+    //            $('#txt31').val(response.Dia31);
+
+    //            PreencherDias(response.DtPreencherDiasIni, response.DtPreencherDiasFim);
+
+    //            $('#txtInsercoes').val(response.Insercoes);
+    //            $('#txtExclusiva').val(response.MidiaExclusivaVivo);
+    //            $('#txtCustoUnitario').val(response.CustoUnitario);
+
+    //            $('#txtValorTotalAcao').val(response.ValorTotalAcao);
+    //            $('#txtPercentualVivo').val(response.PercentualParticipacaoVivo);
+    //            $('#txtValorTotalVivo').val(response.ValorTotalVivo);
+
+    //            $('#txtPercentualParticipacaoRede').val(response.PercentualRede);
+    //            $('#txtValorTotalRede').val(response.ValorTotalRede);
+    //        },
+    //        error: function (response) {
+    //            alert(response);
+    //            $("#loading").hide();
+    //        }
+    //    });
+    //}
+</script>
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">Validar Ações</h3>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="width:70%">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div id="DivPartialViewAtualizacao">
+                    @{
+                        Html.RenderPartial("PartialViewValidaMarketing");
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="dataTable_wrapper">
+                    <table class="table table-striped table-bordered table-hover" id="example">
+                        <thead>
+                            <tr>
+                                <th>Visualizar</th>
+                                <th>Mes da Ação</th>
+                                <th>Verba</th>
+                                <th>Adabas</th>
+                                <th>Parceiro</th>
+                                <th>Canal</th>
+                                <th>DDD</th>
+                                <th>R$ da Ação</th>
+                                <th>R$ da Vivo</th>
+                                <th>Status Atual</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (VivoMais.Repositorio.Entidades.AcaoMarketing Acao in Model.ListaAcoes)
+                            {
+                                <tr class="odd gradeX">
+                                    <td><input type="image" src="~/Imagens/Icones/Look.ico" onclick="RetornarAcao('@Acao.Id');" data-toggle="modal" data-target="#myModal" style="margin-left: 30%;" width="30" height="30"></td>
+                                    <td>@Acao.MesAcao</td>
+                                    <td>@Acao.OrigemVerba</td>
+                                    <td>@Acao.Parceiro.Vendedor</td>
+                                    <td>@Acao.Parceiro.Rede</td>
+                                    <td>@Acao.Parceiro.Canal</td>
+                                    <td>@Acao.Parceiro.Ddd</td>
+                                    <td>@Acao.ValorTotalAcao</td>
+                                    <td>@Acao.ValorTotalVivo</td>
+                                    <td>@Acao.Status.Descricao</td>
+                                </tr>
+                            }
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

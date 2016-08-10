@@ -1,0 +1,472 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vivo Mais+</title>
+
+    @* Css *@
+    <link href="~/vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <link href="~/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <link href="~/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <link href="~/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
+    <link href="~/vendors/jqvmap/dist/jqvmap.min.css" rel="stylesheet" />
+    <link href="~/css/datatables/css/dataTables.bootstrap.css" rel="stylesheet">
+
+    <link href="~/build/css/custom.css" rel="stylesheet">
+    <link href="~/css/ui-lightness/jquery-ui-1.8.5.custom.css" rel="stylesheet">
+    <link href="~/vendors/animate.css/animate.min.css" rel="stylesheet">
+    
+
+    <style>
+        div#loading
+        {
+            display: none;
+            width:200px;
+            height: 100px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            text-align:center;
+            padding:10px;
+            font:normal 16px Tahoma, Geneva, sans-serif;
+            margin-left: -50px;
+            margin-top: -50px;
+            z-index:2;
+            overflow: auto;
+        }
+    </style>
+
+    @* Javascript *@
+    <script src="~/Scripts/ajax.js"></script>
+    <script type="text/javascript">
+        function EnviaHTML(url) {
+            $("#loading").show();
+            window.location = url;
+        }
+
+    </script>
+
+</head>
+<body class="nav-md">
+    <div class="container body">
+        <div class="main_container">
+
+            <div class="col-md-3 left_col">
+                <div>
+
+                    <div class="navbar nav_title" style="border: 0;">
+                        <a href="#" class="site_title"><i class="fa fa-paw"></i> <span>Vivo Mais+</span></a>
+                    </div>
+                    <div class="clearfix"></div>
+
+                    <!-- menu prile quick info -->
+                    <div class="profile">
+                        <div class="profile_pic">
+                            <img src="~/Imagens/elayne.jpg" alt="..." class="img-circle profile_img">
+                        </div>
+                        <div class="profile_info">
+                            <span>Bem-Vindo,</span>
+                            <h2>@Session["Nome"]</h2>
+                        </div>
+                    </div>
+                    <!-- /menu prile quick info -->
+
+                    <!-- sidebar menu -->
+                    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+
+                        <div class="menu_section">
+                            &nbsp;&nbsp;&nbsp;
+
+                            <ul class="nav side-menu">
+
+                                <li>
+                                    <a><i class="fa fa-home"></i> VPC/VIO <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu" style="display: none">
+                                        <li>
+                                            <a onclick="EnviaHTML('/AcaoMarketing/Index')" href="#">Abrir VPC</a>
+                                        </li>
+                                        <li>
+                                            <a onclick="EnviaHTML('/AcaoMarketing/AcaoVio')" href="#">Abrir VIO</a>
+                                        </li>
+                                        <li>
+                                            <a onclick="EnviaHTML('/AcaoMarketing/AlterarAcao')" href="#">Atualizar Ação</a>
+                                        </li>
+                                        <li>
+                                            <a onclick="EnviaHTML('/AcaoMarketing/ValidaMarketing')" href="#">Validar Ação</a>
+                                        </li>
+                                        <li>
+                                            <a onclick="EnviaHTML('/AcaoMarketing/AprovarAcao')" href="#">Aprovar Ação</a>
+                                        </li>
+                                        <li>
+                                            <a onclick="EnviaHTML('/AcaoMarketing/ConsultarAcao')" href="#">Consultar Ação</a>
+                                        </li>
+                                        <li>
+                                            <a onclick="EnviaHTML('/AcaoMarketing/ConsultarSaldo')" href="#">Consultar Saldo</a>
+                                        </li>
+                                        <li>
+                                            <a onclick="EnviaHTML('/AcaoMarketing/ExtrairPPC')" href="#">Extrair PPC</a>
+                                        </li>
+                                        <li>
+                                            <a onclick="EnviaHTML('/AcaoMarketing/ExtrairAcoes')" href="#">Extrair Ações</a>
+                                        </li>
+                                        <li>
+                                            <a>Acompanhamento<span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu" style="display: none">
+                                                <li class="sub_menu">
+                                                    <a onclick="EnviaHTML('/AcaoMarketing/ExtrairProtocolo')" href="#">Extrair Protocolo</a>
+                                                </li>
+                                                <li>
+                                                    <a onclick="EnviaHTML('/AcaoMarketing/ImportarProtocolo')" href="#">Importar Protocolo</a>
+                                                </li>
+                                                <li>
+                                                    <a onclick="EnviaHTML('/AcaoMarketing/SelecionarREL')" href="#">Selecionar Ações para REL</a>
+                                                </li>
+                                                <li>
+                                                    <a onclick="EnviaHTML('/AcaoMarketing/ExtrairRel')" href="#">Extrair REL</a>
+                                                </li>
+                                                <li>
+                                                    <a onclick="EnviaHTML('/AcaoMarketing/ImportarREL')" href="#">Importar REL</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+
+                                        <li>
+                                            <a>Gerencial<span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu" style="display: none">
+                                                <li class="sub_menu">
+                                                    <a onclick="EnviaHTML('/AcaoMarketing/AcompanhamentoAcao')" href="#">Acompanhamento da Acao</a>
+                                                </li>
+                                                <li class="sub_menu">
+                                                    <a onclick="EnviaHTML('/AcaoMarketing/ConsultarAcompanhamentoAcao')" href="#">Andamento da Acao</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+
+                                    </ul>
+                                </li>
+
+
+                                <li>
+                                    <a><i class="fa fa-desktop"></i> LINHA TESTE <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu" style="display: none">
+                                        <li>
+                                            <a onclick="EnviaHTML('/LinhaTeste/Index')" href="#">Solicitação de Linha Teste</a>
+                                        </li>
+                                        <li>
+                                            <a onclick="EnviaHTML('/LinhaTeste/Relatorio')" href="#">Relatório</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a><i class="fa fa-desktop"></i> ACESSOS <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu" style="display: none">
+                                        <li>
+                                            <a onclick="EnviaHTML('/AcessoTerceiros/')" href="#">Solicitação de Acessos</a>
+                                        </li>
+                                        <li>
+                                            <a onclick="EnviaHTML('/AcessoTerceiros/ConsultarAcessosTerceiros')" href="#">Consultar Acessos</a>
+                                        </li>
+                                        <li>
+                                            <a onclick="EnviaHTML('/AcessoTerceiros/ExtrairHumanos')" href="#">Extrair Humanos</a>
+                                        </li>
+                                        <li>
+                                            <a onclick="EnviaHTML('/AcessoTerceiros/AtualizarAcessoTerceiros')" href="#">Atualiza Acessos</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a><i class="fa fa-table"></i> RESET SENHA <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu" style="display: none">
+                                        <li>
+                                            <a onclick="EnviaHTML('/ResetSenha/')" href="#">Solicitar</a>
+                                        </li>
+                                        <li>
+                                            <a onclick="EnviaHTML('/ResetSenha/Movimentacao')" href="#">Atualizar</a>
+                                        </li>
+                                        <li>
+                                            <a onclick="EnviaHTML('/ResetSenha/ResetSenhaRetorno')" href="#">Retornar</a>
+                                        </li>
+                                        <li>
+                                            <a onclick="EnviaHTML('/ResetSenha/ResetSenhaGestao')" href="#">Acompanhamento</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a><i class="fa fa-bug"></i> BOOK DE PLANOS <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu" style="display: none">
+                                        <li>
+                                            <a onclick="EnviaHTML('/BookPlanos/Index')">Consultar Planos</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Preencher Credenciamento</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a><i class="fa fa-windows"></i>DESCREDENCIAMENTO<span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu" style="display: none">
+                                        <li>
+                                            <a href="#">Descredenciar Parceiro</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Atualizar Descredenciamento</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Consultar</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a><i class="fa fa-windows"></i> CARTEIRA <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu" style="display: none">
+                                        <li>
+                                            <a onclick="EnviaHTML('/Carteira/')" href="#">Abrir Carteiras</a>
+                                        </li>
+                                        <li>
+                                            <a onclick="EnviaHTML('/Carteira/DefinirCarteiras')" href="#">Definir Carteiras</a>
+                                        </li>
+                                        <li>
+                                            <a onclick="EnviaHTML('/Carteira/ConsultarCarteira')" href="#">Consultar</a>
+                                        </li>
+                                        <li>
+                                            <a onclick="EnviaHTML('/Carteira/GestaoCarteira')" href="#">Visão Gráfica</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a><i class="fa fa-windows"></i> INTELIGÊNCIA <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu" style="display: none">
+                                        <li>
+                                            <a href="#">Consultar Linhas</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Saving</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Extrair Saving</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a><i class="fa fa-windows"></i> ADMINISTRADOR <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu" style="display: none">
+                                        <li>
+                                            <a href="/SaldoRede/Index">Inserir Verbas</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="/PilulasDoSIM/"><i class="fa fa-edit"></i>PILULA DO SIM</a>
+                                </li>
+                            </ul>
+                        </div>
+                        @*<div class="menu_section">
+                            <h3>Live On</h3>
+                            <ul class="nav side-menu">
+                                <li>
+                                    <a><i class="fa fa-sitemap"></i> Multilevel Menu <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu" style="display: none">
+                                        <li><a href="#">Level One</a>
+                                        <li>
+                                            <a>Level One<span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu" style="display: none">
+                                                <li class="sub_menu">
+                                                    <a href="#">Level Two</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Level Two</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Level Two</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="#">Level One</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>*@
+
+                    </div>
+                    <!-- /sidebar menu -->
+                    <!-- /menu footer buttons -->
+                    @*<div class="sidebar-footer hidden-small">
+                        <a data-toggle="tooltip" data-placement="top" title="Settings">
+                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                        </a>
+                        <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+                            <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+                        </a>
+                        <a data-toggle="tooltip" data-placement="top" title="Lock">
+                            <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                        </a>
+                        <a data-toggle="tooltip" data-placement="top" title="Logout">
+                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        </a>
+                    </div>*@
+                    <!-- /menu footer buttons -->
+                </div>
+            </div>
+
+            <!-- top navigation -->
+            <div class="top_nav">
+
+                <div class="nav_menu">
+                    <nav class="" role="navigation">
+                        <div class="nav toggle">
+                            <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                        </div>
+
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="">
+                                <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    <img src="~/Imagens/elayne.jpg" alt="">@Session["Nome"]
+                                    <span class=" fa fa-angle-down"></span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
+                                    <li>
+                                        <a href="javascript:;">  Perfil</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="badge bg-red pull-right">50%</span>
+                                            <span>Configuração</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">Ajuda</a>
+                                    </li>
+                                    <li>
+                                        <a href="/Acesso/Index"><i class="fa fa-sign-out pull-right"></i>Sair</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li role="presentation" class="dropdown">
+                                <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa fa-envelope-o"></i>
+                                    <span class="badge bg-green">6</span>
+                                </a>
+                                <ul id="menu1" class="dropdown-menu list-unstyled msg_list animated fadeInDown" role="menu">
+                                    <li>
+                                        <a>
+                                            <span class="image">
+                                                <img src="images/img.jpg" alt="Profile Image" />
+                                            </span>
+                                            <span>
+                                                <span>Pílula do SIM</span>
+                                                <span class="time">3 min atras</span>
+                                            </span>
+                                            <span class="message">
+                                                <a href='~/PilulasDoSIM/Index'>Acabamos de finalizar a nova pílula do SIM sobre <br /> GSS. Veja mais clicando aqui.</a>
+                                            </span>
+
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a>
+                                            <span class="image">
+                                                <img src="images/img.jpg" alt="Profile Image" />
+                                            </span>
+                                            <span>
+                                                <span>Carteira Atualizada</span>
+                                                <span class="time">15 mins atras</span>
+                                            </span>
+                                            <span class="message">
+                                                Consulte sua carteira, qualquer problema fale com seu Territórial. Sua remuneração depende disso.
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a>
+                                            <span class="image">
+                                                <img src="images/img.jpg" alt="Profile Image" />
+                                            </span>
+                                            <span>
+                                                <span>Acesso Liberado</span>
+                                                <span class="time">2 dias atras</span>
+                                            </span>
+                                            <span class="message">
+                                                <a href='~/AcessoTerceiros/ConsultarAcessosTerceiros'>Você já pode utilizar nossos sistemas. <br />Usuario foi liberado. Veja mais clicando aqui.</a>
+                                            </span>
+                                        </a>
+                                    </li>
+                                    @*<li>
+                                        <a>
+                                            <span class="image">
+                                                <img src="images/img.jpg" alt="Profile Image" />
+                                            </span>
+                                            <span>
+                                                <span>John Smith</span>
+                                                <span class="time">3 mins ago</span>
+                                            </span>
+                                            <span class="message">
+                                                Film festivals used to be do-or-die moments for movie makers. They were where...
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <div class="text-center">
+                                            <a href="inbox.html">
+                                                <strong>See All Alerts</strong>
+                                                <i class="fa fa-angle-right"></i>
+                                            </a>
+                                        </div>
+                                    </li>*@
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </nav>
+                </div>
+
+            </div>
+
+
+            <div class="right_col" role="main">
+               <div id="loading" style="display: none; top:50%;left: 50%;">
+                    <img id="spinner" alt="Updating ..." src="~/Imagens/aguarde.gif" />
+                </div>
+                @RenderBody()
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="custom_notifications" class="custom-notifications dsp_none">
+        <ul class="list-unstyled notifications clearfix" data-tabbed_notifications="notif-group"></ul>
+        <div class="clearfix"></div>
+        <div id="notif-group" class="tabbed_notifications"></div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="~/vendors/jquery/dist/jquery.min.js"></script>
+    <script src="~/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/vendors/fastclick/lib/fastclick.js"></script>
+    <script src="~/vendors/nprogress/nprogress.js"></script>
+    <script src="~/build/js/custom.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+
+    <!-- DataTables JavaScript -->
+    <script type="text/javascript" src="~/js/dataTables/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="~/js/dataTables/dataTables.tableTools.js"></script>
+    <script type="text/javascript" src="~/js/dataTables/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
+    <script src="~/vendors/iCheck/icheck.min.js"></script>
+
+</body>
+</html>
+

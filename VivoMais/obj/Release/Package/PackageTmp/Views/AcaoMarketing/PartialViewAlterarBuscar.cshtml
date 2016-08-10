@@ -1,0 +1,62 @@
+﻿@model VivoMais.Models.AcaoMarketingViewModel
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#TableAcoes').dataTable({
+
+            //dom: 'T<"clear">lfrtip',
+            dom:
+             "<'row'<'col-sm-6'l><'col-sm-6'f>>R" +
+             "<'row'<'col-sm-12'tr>>" +
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            order: [[5, "desc"]],
+            bHeader: true,
+        });
+
+    });
+
+</script>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="dataTable_wrapper" id="IdTeste">
+
+            <table class="table table-striped table-bordered table-hover" id="TableAcoes">
+                <thead>
+                    <tr>
+                        <th>Visualizar</th>
+                        <th>Ação</th>
+                        <th>Adabas</th>
+                        <th>Tipo de Mídia</th>
+                        <th>Mídia Detalhada</th>
+                        <th>R$ Ação</th>
+                        <th>R$ Vivo</th>
+                        <th>% da Vivo</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @if (Model != null)
+                    {
+                        foreach (VivoMais.Repositorio.Entidades.AcaoMarketing Acao in Model.ListaAcoes)
+                        {
+                            <tr class="odd gradeX">
+                                <td><input type="image" src="~/Imagens/Icones/Look.ico" onclick="ObterAcao('@Acao.Id');" data-toggle="modal" data-target="#myModal" style="margin-left: 30%;" width="30" height="30"></td>
+                                <td>@Acao.OrigemVerba</td>
+                                <td>@Acao.Parceiro.Vendedor</td>
+                                <td>@Acao.Midia.Midia</td>
+                                <td>@Acao.MidiaDetalhada.MidiaDetalhada</td>
+                                <td>@Acao.ValorTotalAcao</td>
+                                <td>@Acao.ValorTotalVivo</td>
+                                <td>@Acao.PercentualParticipacaoVivo%</td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

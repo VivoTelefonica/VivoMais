@@ -1,0 +1,181 @@
+﻿@using System.Collections
+@model VivoMais.Models.ResetSenhaViewModel
+
+@{
+    
+    ViewBag.Title = "Index";
+
+    if (Session["TipoMenu"].ToString() != "")
+    {
+        Layout = Session["TipoMenu"].ToString();
+    }
+    else
+    {
+        Session.Clear();
+        Session.Abandon();
+        FormsAuthentication.SignOut();
+        Response.Redirect("/Acesso/Index");
+    }
+}
+
+@* Javascript *@
+<script type="text/javascript" src="~/Acesso/Js/jquery-2.2.1.js"></script>
+<script type="text/javascript" src="~/Scripts/ajax.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+<script type="text/javascript">
+
+    function FuncSucesso(Data) {
+        alert('Reset Solicitado com Sucesso!');
+        document.getElementById("formID").reset();
+    }
+
+    function FuncError(Data) {
+        alert('Ocorreu um erro ao tentar processar sua solicitação!');
+    }
+
+    $(document).ready(function () {
+
+
+
+        $("#DDLUf").change(function () {
+            $("#DDLDdd").empty();
+            $("#loading").show();
+
+            $.ajax({
+                type: 'POST',
+                url: '/ResetSenha/ObterDdd',
+                dataType: 'json',
+                data: { uf: $("#DDLUf").val() },
+
+                success: function (DDD) {
+                    $("#DDLDdd").append("<option value=''>SELECIONE</option>");
+                    $.each(DDD, function (i, DDD) {
+                        $("#DDLDdd").append('<option value="' + DDD + '">' + DDD + '</option>');
+                        $('#loading').hide();
+                    });
+                },
+                error: function (ex) {
+                    alert('Ocorreu um erro ao tentar processar sua solicitação.' + ex);
+                }
+            });
+            return false;
+        });
+
+        $("#txtMatricula").change(function () {
+            $("#loading").show();
+            $.ajax({
+                dataType: "json",
+                type: 'GET',
+                url: '@Url.Action("ProcuraColaboradorMatricula")', // we are calling json method
+                data: { matricula: $("#txtMatricula").val() },
+
+                success: function (colaborador) {
+                    $('#loading').hide();
+                    $(colaborador).each(function (i) {
+                        if (colaborador != null) {
+                            $('#txtLogin').val(colaborador.Login);
+                            $('#txtNome').val(colaborador.Nome);
+                            $('#txtCPF').val(colaborador.Cpf);
+
+                        }
+
+                    });
+                },
+                error: function (ex) {
+                    $('#loading').hide();
+                    $('#txtLogin').val('');
+                    $('#txtNome').val('');
+                    $('#txtCPF').val('');
+                }
+            });
+        });
+    });
+</script>
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">Reset de Senha</h3>
+    </div>
+</div>
+<div class="panel-body">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                  @using (Ajax.BeginForm("SolicitaReset", "ResetSenha", null, new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "feedback", HttpMethod = "Post", OnSuccess = "FuncSucesso", OnFailure = "FuncError" }, new { @id = "formID" }))
+                  {
+                      <div class="row">
+                          <div class="col-sm-2">
+                              <label>UF:</label>
+                              @Html.DropDownListFor(x => x.ResetSenha.Uf, new SelectList((IEnumerable)ViewData["UF"]), "SELECIONE", new { @id = "DDLUf", @class = "form-control", style = "width: 100%" })
+                              @Html.ValidationMessageFor(x => x.ResetSenha.Uf, "", new { @class = "text-danger" })
+                          </div>
+                          <div class="col-sm-10">
+                              <label>DDD:</label>
+                              @Html.DropDownListFor(x => x.ResetSenha.Ddd, new SelectList(string.Empty), "SELECIONE", new { @id = "DDLDdd", @class = "form-control", style = "width: 15%" })
+                              @Html.ValidationMessageFor(x => x.ResetSenha.Ddd, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+
+                      <div class="row">
+                          <div class="col-sm-3">
+                              <label>MATRÍCULA: </label>
+                              @Html.TextBoxFor(x => x.ResetSenha.Matricula, new { @id = "txtMatricula", @class = "form-control", style = "width: 100%", placeholder = "MATRÍCULA" })
+                              @Html.ValidationMessageFor(x => x.ResetSenha.Matricula, "", new { @class = "text-danger" })
+                          </div>
+                          <div class="col-sm-9">
+                              <label>LOGIN: </label>
+                              @Html.TextBoxFor(x => x.ResetSenha.Login, new { @id = "txtLogin", @class = "form-control", style = "width: 30%", placeholder = "LOGIN" })
+                              @Html.ValidationMessageFor(x => x.ResetSenha.Login, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+
+                      <div class="row">
+                          <div class="col-sm-5">
+                              <label>NOME: </label>
+                              @Html.TextBoxFor(x => x.ResetSenha.Nome, new { @id = "txtNome", @class = "form-control", placeholder = "NOME", style = "width: 100%" })
+                              @Html.ValidationMessageFor(x => x.ResetSenha.Nome, "", new { @class = "text-danger" })
+                          </div>
+                          <div class="col-sm-7">
+                              <label>CPF: </label>
+                              @Html.TextBoxFor(x => x.ResetSenha.Cpf, new { @id = "txtCPF", style = "width: 35%", @onkeypress = "return FormataCpf(this, event)", placeholder = "CPF", @maxlength = "14", @class = "form-control" })
+                              @Html.ValidationMessageFor(x => x.ResetSenha.Cpf, "", new { @class = "text-danger" })
+                          </div>
+                      </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>SISTEMAS: </label>
+                            <ul>
+
+                                @for (int i = 0; i < Model.ResetSenhaMovimentacao.Count; i++)
+                                {
+                                    <li>
+                                        @Html.HiddenFor(m => Model.ResetSenhaMovimentacao[i].Sistema)
+                                        @Html.CheckBoxFor(it => it.ResetSenhaMovimentacao[i].Checked, new { id = "Teste", name = "xTeste" }) @Model.ResetSenhaMovimentacao[i].Sistema
+                                        @Html.ValidationMessageFor(m => m.ResetSenhaMovimentacao[i].Checked, "", new { @class = "text-danger" })
+                                    </li>
+                                }
+
+                            </ul>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input id="btnSolicitar" class="btn btn-primary" type="submit" style="width:150px" value="Solicitar" />
+                        </div>
+                    </div>
+
+
+
+                  }
+    </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,150 @@
+﻿@model VivoMais.Models.ResetSenhaTotalViewModel
+
+<script type="text/javascript">
+
+    function InsereAceiteSenhaGc(id) {
+        $("#loading").show();
+        $.ajax({
+            type: 'GET',
+            url: '/ResetSenha/InsereAceiteSenhaGc',
+            dataType: 'html',
+            cache: false,
+            async: true,
+            data: { Id: id },
+            success: function (response) {
+                $("#loading").hide();
+                alert('Aceite de senha realizado com sucesso!');
+                $("#PartialRetornoReset").html(response);
+            },
+            error: function (response) {
+                alert(response);
+                $("#loading").hide();
+            }
+        });
+    }
+
+    function AtribuirID(id, Sistema, Nome) {
+
+        document.getElementById("IdGc").value = id;
+        document.getElementById("txtSistema").value = Sistema;
+        document.getElementById("txtNome").value = Nome;
+
+        document.getElementById("txtMotivo").value = '';
+    }
+
+    function InsereRejeiteGc(id) {
+
+        var id = document.getElementById("IdGc").value;
+        var motivo = document.getElementById("txtMotivo").value;
+
+        $("#loading").show();
+        $.ajax({
+            type: 'GET',
+            url: '/ResetSenha/RejeiteSenhaGc',
+            dataType: 'html',
+            cache: false,
+            async: true,
+            data: { Id: id, Motivo: motivo },
+            success: function (response) {
+                alert('Rejeite realizado com sucesso!');
+                location.reload();
+            },
+            error: function (response) {
+                alert(response);
+                $("#loading").hide();
+            }
+        });
+
+    }
+
+
+
+</script>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Motivo do Rejeite</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="IdGc" />
+
+                <label>SISTEMA:</label>
+                <input type="text" id="txtSistema" class="form-control" style="width:30%" readonly="readonly" />
+                <br />
+                <label>COLABORADOR:</label>
+                <input type="text" id="txtNome" class="form-control" style="width:70%" readonly="readonly" />
+                <br />
+                <input type="text" id="txtMotivo" style="height:50px" rows="2" class="form-control" placeholder="Descrição do Motivo" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="InsereRejeiteGc();" class="btn btn-primary">Atualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel-body">
+    <div id="PartialSolicitacaoReset" class="panel panel-default">
+        <div class="panel-body">
+            <div class="dataTable_wrapper">
+                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                    <thead>
+                        <tr>
+                            <th style="width:8%">Solicitação</th>
+                            <th style="width:18%">Nome</th>
+                            <th style="width:7%">DDD</th>
+                            <th style="width:9%">CPF</th>
+                            <th style="width:8%">Matricula</th>
+                            <th style="width:6%">Login</th>
+                            <th style="width:9%">Sistema</th>
+                            <th style="width:9%">Senha/Motivo</th>
+                            <th style="width:8%">Aceitar</th>
+                            <th style="width:9%">Recusar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (VivoMais.Repositorio.Entidades.ResetCompleto reset in Model.ResetCompleto)
+                        {
+                            <tr class="odd gradeX">
+                                <td>@reset.ResetMov.Data.ToString("dd/MM/yyyy")</td>
+                                <td>@reset.Reset.Nome</td>
+                                <td>@reset.Reset.Ddd</td>
+                                <td>@reset.Reset.Cpf</td>
+                                <td>@reset.Reset.Matricula</td>
+                                <td>@reset.Reset.Login</td>
+                                <td>@reset.ResetMov.Sistema</td>
+
+
+                                @if (reset.ResetMov.Senha == "")
+                                {
+                                    <td><b><u>Motivo</u></b>: @reset.ResetMov.MotivoRejeite</td>
+                                }
+                                else
+                                {
+                                    <td><b><u>Senha</u></b>: @reset.ResetMov.Senha</td>
+                                }
+
+                                <td><input type="image" src="~/Imagens/Icones/Aceitar.ico" onclick="InsereAceiteSenhaGc(@reset.ResetMov.Id);" style="margin-left: 30%;" width="28" height="28"></td>
+                                <td><input type="image" src="~/Imagens/Icones/Negar.ico" onclick="AtribuirID(@reset.ResetMov.Id,'@reset.ResetMov.Sistema','@reset.Reset.Nome');" data-toggle="modal" data-target="#myModal" style="margin-left:30%;" width="28" height="28"></td>
+
+
+                            </tr>
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+

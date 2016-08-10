@@ -1,0 +1,156 @@
+﻿@using System.Collections
+@model VivoMais.Models.AcaoMarketingViewModel
+@{
+    ViewBag.Title = "ExtrairPPC";
+    if (Session["TipoMenu"].ToString() != "")
+    {
+        Layout = Session["TipoMenu"].ToString();
+    }
+    else
+    {
+        Session.Clear();
+        Session.Abandon();
+        FormsAuthentication.SignOut();
+        Response.Redirect("/Acesso/Index");
+    }
+}
+
+@* Javascript *@
+<script type="text/javascript" src="~/Scripts/jquery-1.8.0.js"></script>
+<script type="text/javascript" src="~/Scripts/ajax.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<script type="text/javascript">
+
+    function Download(xUf, xGc) {
+        $("#loading").show();
+        var table = $("#table-draggable2 tbody");
+        var IdExtracao = {};
+
+        table.find('tr').each(function (i) {
+            var $tds = $(this).find('th');
+            IdExtracao[i] = $tds.eq(0).text();
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: '/AcaoMarketing/ArrayExtrairPPC',
+            dataType: 'json',
+            data: {
+                Id: IdExtracao
+            },
+            success: function (response) {
+                $("#loading").hide();
+                window.location.href = '/AcaoMarketing/Download?Tipo=ppc.xls&Caminho=C:\\PPC\\ppc.xls'
+            },
+            error: function (response) {
+                alert("error!");
+                $("#loading").hide();
+
+            }
+        });
+    }
+
+    $(document).ready(function () {
+
+        $("#btnExtrair").hide();
+
+        $('#myDiv').fadeIn('fast').delay(2000).fadeOut('fast');
+
+        $(".help-tip").hover(function () {
+            $('#myDiv').show();
+        }, function () {
+            $('#myDiv').hide();
+        });
+
+        $("#DDLVendedor").change(function () {
+            $("#txtRede").empty();
+            $("#loading").show();
+
+            $.ajax({
+                type: 'POST',
+                url: '/Parceiro/ObterInformacoesParceiros',
+                dataType: 'json',
+                data: { Adabas: $("#DDLVendedor").val() },
+
+                success: function (Adabas) {
+                    $('#loading').hide();
+                    $("#txtRede").val(Adabas.Rede);
+                    $("#btnExtrair").hide();
+                },
+                error: function (ex) {
+                    alert('Ocorreu um erro ao tentar processar sua solicitação.' + ex);
+                }
+            });
+            return false;
+        });
+
+
+    });
+
+</script>
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">Extrair PPC</h3>
+    </div>
+</div>
+
+<div class="panel-body">
+    <div class="form-group">
+
+        @using (Ajax.BeginForm("ObterPPC", "AcaoMarketing", null, new AjaxOptions { UpdateTargetId = "dvResultado", HttpMethod = "Post" }, new { @id = "formID" }))
+        {
+            <div class="row">
+                <div class="col-sm-2">
+                    <label>MES DA AÇÃO:</label>
+                    @Html.DropDownListFor(x => x.AcaoMarketing.MesAcao, new SelectList((IEnumerable)ViewData["MESES"]), "SELECIONE", new { @id = "DDLMesAcao", @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.AcaoMarketing.MesAcao, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-10">
+                    <label>ORIGEM DE VERBA:</label>
+                    @Html.DropDownListFor(x => x.AcaoMarketing.OrigemVerba, new List<SelectListItem>
+                                                   {
+                                                       new SelectListItem{ Text="VERBA COOPERADA", Value="VERBA COOPERADA" },
+                                                       new SelectListItem{ Text="VERBA DE INCENTIVO A OPEN", Value="VERBA DE INCENTIVO A OPEN" }
+                                                   }, "SELECIONE"
+                                                   , new { @id = "DDLOrigemVerba", @class = "form-control", style = "width: 25%" })
+                    @Html.ValidationMessageFor(x => x.AcaoMarketing.OrigemVerba, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <label>PONTO DE VENDA:</label>
+                    @Html.DropDownListFor(x => x.AcaoMarketing.Parceiro.Vendedor, new SelectList((IEnumerable)ViewData["ADABAS"]), "SELECIONE", new { @id = "DDLVendedor", @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.AcaoMarketing.Parceiro.Vendedor, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-10">
+                    <label>REDE:</label>
+                    @Html.TextBoxFor(x => x.AcaoMarketing.Parceiro.Rede, new { @id = "txtRede", @class = "form-control", @readonly = "readonly", style = "width: 70%" })
+                    @Html.ValidationMessageFor(x => x.AcaoMarketing.Parceiro.Rede, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <input id="btnObterPPC" class="btn btn-primary" style="width:150px" type="submit" value="Buscar" />
+                </div>
+            </div>
+        }
+
+
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div id="dvResultado">
+            @{
+                Html.RenderPartial("PartialViewExtrairPPC");
+            }
+        </div>
+    </div>
+</div>

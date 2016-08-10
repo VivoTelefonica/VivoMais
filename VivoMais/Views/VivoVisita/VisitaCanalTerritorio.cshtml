@@ -1,0 +1,876 @@
+﻿
+@model VivoMais.Models.VivoVisitaViewModel
+@{
+    ViewBag.Title = "Vivo Visita";
+    if (Session["TipoMenu"].ToString() != "")
+    {
+        Layout = Session["TipoMenu"].ToString();
+    }
+    else
+    {
+        Session.Clear();
+        Session.Abandon();
+        FormsAuthentication.SignOut();
+        Response.Redirect("/Acesso/Index");
+    }
+}
+
+
+<script type="text/javascript" src="~/Scripts/jquery-1.8.0.js"></script>
+<script type="text/javascript" src="~/Scripts/ajax.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<script type="text/javascript">
+
+    function FuncSucesso() {
+        alert('Visita Incluída com Sucesso!');
+        document.getElementById("formID").reset();
+    }
+
+    function FuncError() {
+        alert('Ocorreu um erro ao tentar processar sua solicitação!');
+    }
+
+    $(document).ready(function () {
+        $('#wizard').smartWizard();
+
+        $('.buttonNext').addClass('btn btn-success');
+        $('.buttonPrevious').addClass('btn btn-primary');
+        $('.buttonFinish').addClass('btn btn-default');
+    });
+</script>
+<!-- /jQuery Smart Wizard -->
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">VIVO VISITA</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Staff Canal e Território</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+
+                @using (Ajax.BeginForm("InsereVisitaCanalTerritorial", "VivoVisita", null, new AjaxOptions { HttpMethod = "Post", OnSuccess = "FuncSucesso", OnFailure = "FuncError" }, new { @id = "formID", @class = "form-horizontal form-label-left" }))
+                {
+
+                <!-- Smart Wizard -->
+                    <div id="wizard" class="form_wizard wizard_horizontal">
+                        <ul class="wizard_steps">
+                            <li>
+                                <a href="#step-1">
+                                    <span class="step_no">1</span>
+                                    <span class="step_descr">
+                                        Pessoas
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#step-2">
+                                    <span class="step_no">2</span>
+                                    <span class="step_descr">
+                                        Estrutura/Operações
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#step-3">
+                                    <span class="step_no">3</span>
+                                    <span class="step_descr">
+                                        Processos
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#step-4">
+                                    <span class="step_no">4</span>
+                                    <span class="step_descr">
+                                        Resultados/Indicadores
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div id="step-1" style="width:100%">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Verificar se existe vaga open e se sim, se já existe movimentação com SPP e status?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasExisteVagaOpenSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasExisteVagaOpenSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Pessoas.PessoasExisteVagaOpenObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Verificar se possui vaga excedente e reintegração?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasPossuiVagaExcedenteReintegracaoSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasPossuiVagaExcedenteReintegracaoSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Pessoas.PessoasPossuiVagaExcedenteReintegracaoObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Verificar se existe funcionário afastado?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarExisteFuncionarioAfastadoSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarExisteFuncionarioAfastadoSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarExisteFuncionarioAfastadoObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Verificar se existe funcionário com estabilidade?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarexisteFuncionarioEstabilidadeSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarexisteFuncionarioEstabilidadeSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarexisteFuncionarioEstabilidadeObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Verificar uniforme?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarUniformeSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarUniformeSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarUniformeObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Verificar absenteísmo?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarAbsenteismoSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarAbsenteismoSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarAbsenteismoObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Verificar fechamento de ponto do HC ?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarFechamentoPontoHCSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarFechamentoPontoHCSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarFechamentoPontoHCObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Verificar documentação de fiscalização do Ministério do Trabalho?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarDocumentacaoFiscalizacaoSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarDocumentacaoFiscalizacaoSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarDocumentacaoFiscalizacaoObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Verificar se todos da equipe estão com crachá?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasTodosEstaoCrachaSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasTodosEstaoCrachaSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Pessoas.PessoasTodosEstaoCrachaObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Verificar apresentação pessoal da equipe?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarApresentacaoPessoalEquipeSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarApresentacaoPessoalEquipeSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarApresentacaoPessoalEquipeObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Verificar adesão a escala?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarAdesaoEscalaSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarAdesaoEscalaSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarAdesaoEscalaObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Verificar o clima da equipe?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarClimaEquipeSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarClimaEquipeSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarClimaEquipeObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Realizar interação com a equipe?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasRealizarInteracaoEquipeSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasRealizarInteracaoEquipeSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Pessoas.PessoasRealizarInteracaoEquipeObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Verificar se todos estão com senhas liberadas para acesso aos sistemas?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasTodosEstaoSenhasLiberadasAcessoSistemasSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasTodosEstaoSenhasLiberadasAcessoSistemasSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Pessoas.PessoasTodosEstaoSenhasLiberadasAcessoSistemasObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Verificar adesão treinamentos (novatos/veteranos) ?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarAdesaoTreinamentosSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarAdesaoTreinamentosSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarAdesaoTreinamentosObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Verificar escala de férias?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarEscalaFeriasSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarEscalaFeriasSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Pessoas.PessoasVerificarEscalaFeriasObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Participar das matinais e/ou vespertinas?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasParticiparMatinaisVespertinasSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasParticiparMatinaisVespertinasSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Pessoas.PessoasParticiparMatinaisVespertinasObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Confirmar se todos os cargos estão realizando a sua atuação?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasConfirmarTodosCargosEstaoRealizandoAtuacaoSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Pessoas.PessoasConfirmarTodosCargosEstaoRealizandoAtuacaoSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Pessoas.PessoasConfirmarTodosCargosEstaoRealizandoAtuacaoObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="step-2" style="width:100%">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Positivação - Verificar se material está positivado conforme mapa de PDV?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesPositivacaoVerificarMaterialPositivadoMapaPDVSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesPositivacaoVerificarMaterialPositivadoMapaPDVSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesPositivacaoVerificarMaterialPositivadoMapaPDVObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Positivação - Verificar se existe falta de material e se já foi solicitado?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesPositivacaoVerificarExisteFaltaMaterialSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesPositivacaoVerificarExisteFaltaMaterialSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesPositivacaoVerificarExisteFaltaMaterialObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Positivação - Verificar se existe material vencido acumulado em loja (inclusive área interna)?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesPositivacaoVerificarExisteMaterialVencidoAcumuladoLojaSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesPositivacaoVerificarExisteMaterialVencidoAcumuladoLojaSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesPositivacaoVerificarExisteMaterialVencidoAcumuladoLojaObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Positivação - Verificar aparelhos ligados na vitrine e bolo, com vinhetas ?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesPositivacaoVerificarAparelhosLigadosVitrineSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesPositivacaoVerificarAparelhosLigadosVitrineSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesPositivacaoVerificarAparelhosLigadosVitrineObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Verificar pendência de manutenção (marquise, fachada, vitrine, lâmpadas, mobiliário)?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesVerificarPendenciaManutencaoSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesVerificarPendenciaManutencaoSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesVerificarPendenciaManutencaoObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Verificar se existe chamadado aberto para manutenção?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesVerificarExisteChamadadoAbertoManutencaoSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesVerificarExisteChamadadoAbertoManutencaoSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesVerificarExisteChamadadoAbertoManutencaoObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Conferir equipamento de informática e se existe chamado em aberto?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesConferirEquipamentoInformaticaSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesConferirEquipamentoInformaticaSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesConferirEquipamentoInformaticaObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Conferir organização da área interna?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesConferirOrganizacaoAreaInternaSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesConferirOrganizacaoAreaInternaSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesConferirOrganizacaoAreaInternaObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Verificar se existe acúmulo de equipamento e mobiliário para devolução?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesVerificarExisteAcumuloEquipamentoMobiliarioDevolucaoSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesVerificarExisteAcumuloEquipamentoMobiliarioDevolucaoSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesVerificarExisteAcumuloEquipamentoMobiliarioDevolucaoObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Conferir limpeza da loja na área interna e externa - "Varejo é detalhe"?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesConferirLimpezaLojaAreaInternaExternaSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesConferirLimpezaLojaAreaInternaExternaSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesConferirLimpezaLojaAreaInternaExternaObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Conferir se vitrines estão trancadas?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesConferirVitrinesEstaoTrancadasSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesConferirVitrinesEstaoTrancadasSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesConferirVitrinesEstaoTrancadasObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Conferir se o alarme está funcionando?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesConferirAlarmeEstaFuncionandoSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesConferirAlarmeEstaFuncionandoSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.EstruturaOperacoes.EstruturaOperacoesConferirAlarmeEstaFuncionandoObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="step-3" style="width:100%">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Estoque - Verificar realização da contagem diária de estoque e se existe divergência ?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosVerificarRealizacaoContagemDiariaEstoqueSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosVerificarRealizacaoContagemDiariaEstoqueSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Processos.ProcessosVerificarRealizacaoContagemDiariaEstoqueObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Estoque - Verificar se planilha de vendas está sendo conferida e se há alguma sinalização especial?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosVerificarPlanilhaVendasConferidaSinalizacaoEspecialSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosVerificarPlanilhaVendasConferidaSinalizacaoEspecialSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Processos.ProcessosVerificarPlanilhaVendasConferidaSinalizacaoEspecialObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Estoque - Verificar organização do estoque?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosVerificarOrganizacaoEstoqueSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosVerificarOrganizacaoEstoqueSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Processos.ProcessosVerificarOrganizacaoEstoqueObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Estoque - Verificar se o cofre está trancado e a senha na posse somente da equipe gerencial ?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosVerificarCofreTrancadoSenhaEquipeGerencialSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosVerificarCofreTrancadoSenhaEquipeGerencialSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Processos.ProcessosVerificarCofreTrancadoSenhaEquipeGerencialObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Estoque - Verificar se existe acumulo de RPAR para devolução?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosVerificarExisteAcumuloRPARDevolucaoSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosVerificarExisteAcumuloRPARDevolucaoSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Processos.ProcessosVerificarExisteAcumuloRPARDevolucaoObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Estoque - Realizar eventualmente contagem em conjunto com gerente e auditoria dos processos?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosRealizarEventualmenteContagemConjuntoGerenteAuditoriaProcessosSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosRealizarEventualmenteContagemConjuntoGerenteAuditoriaProcessosSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Processos.ProcessosRealizarEventualmenteContagemConjuntoGerenteAuditoriaProcessosObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Caixa - Verificar envio de numerário?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosVerificarEnvioNumerarioSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosVerificarEnvioNumerarioSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Processos.ProcessosVerificarEnvioNumerarioObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Caixa - Conferir fundo de troco (Loja R$200,00/Quiosque R$100,00)?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosConferirFundoTrocoSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosConferirFundoTrocoSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Processos.ProcessosConferirFundoTrocoObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Gestão Documental - Conferir se há documentos acumulados na loja e não digitalizados?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosGestaoDocumentalConferirDocumentosAcumuladosLojaNDigitalizadosSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosGestaoDocumentalConferirDocumentosAcumuladosLojaNDigitalizadosSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Processos.ProcessosGestaoDocumentalConferirDocumentosAcumuladosLojaNDigitalizadosObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Gestão Documental - Observar se loja está utilizando tablets para assinatura digital e agilizar serviços no salão?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosGestaoDocumentalObservarLojaEstaUtilizandoTabletsAssinaturaDigitalSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosGestaoDocumentalObservarLojaEstaUtilizandoTabletsAssinaturaDigitalSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Processos.ProcessosGestaoDocumentalObservarLojaEstaUtilizandoTabletsAssinaturaDigitalObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Anatel - Verificar a pasta do GSS/ Contingência ?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosAnatelVerificarPastaGSSSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosAnatelVerificarPastaGSSSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Processos.ProcessosAnatelVerificarPastaGSSObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Anatel - Verificar se a justificativa SMP14 está em dia?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosAnatelVerificarJustificativaSMP14SimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosAnatelVerificarJustificativaSMP14SimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Processos.ProcessosAnatelVerificarJustificativaSMP14Obs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Anatel - Verificar se todo atendimento (expresso e personalizado) estão devidamente registrados?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosAnatelVerificarAtendimentoDevidamenteRegistradosSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosAnatelVerificarAtendimentoDevidamenteRegistradosSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Processos.ProcessosAnatelVerificarAtendimentoDevidamenteRegistradosObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Anatel - Observar gestão fluxo geral loja?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosAnatelObservarGestaoFluxoGeralLojaSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosAnatelObservarGestaoFluxoGeralLojaSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Processos.ProcessosAnatelObservarGestaoFluxoGeralLojaObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Verificar quadro de avisos - atualização de acordo com padrão PEX?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosVerificarQuadroAvisosAtualizacaoPadraoPEXSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosVerificarQuadroAvisosAtualizacaoPadraoPEXSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Processos.ProcessosVerificarQuadroAvisosAtualizacaoPadraoPEXObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Suprimentos - Verificar estoque de material de escritório, especialmente papel A4 e bobinas?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosSuprimentosVerificarEstoqueMaterialEscritorioSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Processos.ProcessosSuprimentosVerificarEstoqueMaterialEscritorioSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Processos.ProcessosSuprimentosVerificarEstoqueMaterialEscritorioObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="step-4" style="width:100%">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Avaliar performance loja mês corrente, MoM, YoY- produtividade / hc?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Indicadores.ResultadosIndicadoresAvaliarPerformanceCorrenteSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Indicadores.ResultadosIndicadoresAvaliarPerformanceCorrenteSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Indicadores.ResultadosIndicadoresAvaliarPerformanceCorrenteObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Indicadores de tempo - TMA, TME, Senhas expressas, SMP e CONVERSÃO?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Indicadores.ResultadosIndicadoresIndicadoresTempoSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Indicadores.ResultadosIndicadoresIndicadoresTempoSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Indicadores.ResultadosIndicadoresIndicadoresTempoObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Sempre que possível, acompanhar alguns atendimentos, abordar clientes, etc?</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Indicadores.ResultadosIndicadoresAcompanharAlgunsAtendimentosSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Indicadores.ResultadosIndicadoresAcompanharAlgunsAtendimentosSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Indicadores.ResultadosIndicadoresAcompanharAlgunsAtendimentosObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Rentabilidade</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Conformidade:</label>
+                                    <br />
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Indicadores.ResultadosIndicadoresRentabilidadeSimNao, "SIM", new { @class = "flat", value = "SIM", Checked = "checked" }) SIM
+                                    @Html.RadioButtonFor(x => x.CanalTerritorio.Indicadores.ResultadosIndicadoresRentabilidadeSimNao, "NÃO", new { @class = "flat", value = "NÃO" }) NÃO
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Observação:</label>
+                                    @Html.TextAreaFor(x => x.CanalTerritorio.Indicadores.ResultadosIndicadoresRentabilidadeObs, new { @class = "form-control", rows = "3" })
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <input id="btnCadastrar" class="btn btn-success pull-right" style="width:150px" type="submit" value="Cadastrar" />
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                <!-- End SmartWizard Content -->
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

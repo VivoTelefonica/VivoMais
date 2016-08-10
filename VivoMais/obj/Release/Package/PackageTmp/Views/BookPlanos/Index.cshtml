@@ -1,0 +1,62 @@
+﻿
+@model VivoMais.Models.BookPlanosViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/_LayoutPage.cshtml";
+}
+
+<script type="text/javascript" src="~/Scripts/jquery-1.8.0.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">Book de Planos</h3>
+    </div>
+</div>
+<div class="panel-body">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+
+                @using (Ajax.BeginForm("ObterBookPlanos", "BookPlanos", new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "dvResultado", }, new { @id = "formID" }))
+                {
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label>DDD:</label>
+                            @Html.DropDownListFor(x => x.Ddd, new SelectList(new List<string> { "7x", "8x" }), "SELECIONE", new { @id = "DDLAcao", @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.Ddd, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-sm-10">
+                            <label>PLANO:</label>
+                            @Html.DropDownListFor(x => x.Plano, new SelectList(new List<string> { "VIVO_CONTROLE_FATURA", "VIVO_CONTROLE_CARTÃO", "VIVO_PÓS", "VIVO_PRÉ", "VIVO_INTERNET_MÓVEL", "VIVO_FIXO", "TODOS" }), "SELECIONE", new { @id = "DDLPlano", @class = "form-control", style = "width: 40%" })
+                            @Html.ValidationMessageFor(x => x.Plano, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input id="btnBuscar" class="btn btn-primary" style="width:150px" type="submit" value="Buscar" />
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="dvResultado">
+                @{
+                    Html.RenderPartial("PartialViewBookPlanos");
+                }
+            </div>
+        </div>
+    </div>
+
+</div>
+

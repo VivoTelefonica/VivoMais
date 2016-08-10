@@ -1,0 +1,115 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    if (Session["TipoMenu"].ToString() != "")
+    {
+        Layout = Session["TipoMenu"].ToString();
+    }
+    else
+    {
+        Session.Clear();
+        Session.Abandon();
+        FormsAuthentication.SignOut();
+        Response.Redirect("/Acesso/Index");
+    }
+}
+
+<script type='text/javascript' src='~/js/pilulasdosim/jquery.js'></script>
+<script type='text/javascript' src='~/js/pilulasdosim/amazingslider.js'></script>
+<script type="text/javascript" src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
+<script type='text/javascript' src='~/js/pilulasdosim/jquery-migrate.min.js'></script>
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3>Pilulas do SIM</h3>
+    </div>
+</div>
+<div class="panel-body">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+
+                <div class="demo-slider" style="width:75%;border-style:outset;">
+                    <div id="amazingslider-wrapper-27">
+                        <div id="amazingslider-27">
+
+                            <ul class="amazingslider-slides" style="display:none;">
+                                <li>
+                                    <<img src="~/Imagens/PilulaDoSim/SiteDeCompras.png" alt="Site de Compras" data-description="" />
+                                    <video preload="none" src="file:///C:/Pilula do Sim/SITE DE COMPRAS FINAL.mp4"></video>
+                                </li>
+
+                                <li>
+                                    <<img src="~/Imagens/PilulaDoSim/GerenciamentoDeCaixa.png" alt="Gerenciamento De Caixa" data-description="" />
+                                    <video preload="none" src="file:///C:/Pilula do Sim/Gerenciamento de Caixa  Final.mp4"></video>
+                                </li>
+
+                                <li>
+                                    <<img src="~/Imagens/PilulaDoSim/DevStandVenda.png" alt="Devolução Standard e Cancelamento de Venda" data-description="" />
+                                    <video preload="none" src="file:///C:/Pilula do Sim/DEVECANCFULLHD.mp4"></video>
+                                </li>
+
+                                <li>
+                                    <<img src="~/Imagens/PilulaDoSim/Merchan.png" alt="Merchandising - Revenda" data-description="" />
+                                    <video preload="none" src="file:///C:/Pilula do Sim/Merchan.mp4"></video>
+                                </li>
+
+                                <li>
+                                    <<img src="~/Imagens/PilulaDoSim/MobileToken.png" alt="Mobile Token" data-description="Sistema utilizado para acessar o Vivo 360 fora do ambiente de rede" />
+                                    <video preload="none" src="file:///C:/Pilula do Sim/Mobile Token.mp4"></video>
+                                </li>
+
+                                <li>
+                                    <<img src="~/Imagens/PilulaDoSim/IDM E GAATI.png" alt="IDM e GAATI" data-description="Sistema utilizado para liberar acessos aos sistemas da Vivo para colaboradores e terceiros" />
+                                    <video preload="none" src="file:///C:/Pilula do Sim/VIVO IDM E GAATI.mp4"></video>
+                                </li>
+
+                                <li>
+                                    <<img src="~/Imagens/PilulaDoSim/SAP.png" alt="SAP" data-description="" />
+                                    <video preload="none" src="file:///C:/Pilula do Sim/SAPALTA.mp4"></video>
+                                </li>
+
+                                <li>
+                                    <<img src="~/Imagens/PilulaDoSim/Vivo360.png" alt="Vivo 360" data-description="" />
+                                    <video preload="none" src="file:///C:/Pilula do Sim/Vivo 360.mp4"></video>
+                                </li>
+
+                                <li>
+                                    <<img src="~/Imagens/PilulaDoSim/VivoGED.png" alt="Vivo GED" data-description="" />
+                                    <video preload="none" src="file:///C:/Pilula do Sim/VIVO GED.mp4"></video>
+                                </li>
+
+                                <li>
+                                    <<img src="~/Imagens/PilulaDoSim/VivoRemedy.png" alt="Vivo Remedy" data-description="Sistema utilizado para abertura de chamados em geral" />
+                                    <video preload="none" src="file:///C:/Pilula do Sim/VIVO REMEDY.mp4"></video>
+                                </li>
+
+                                <li>
+                                    <<img src="~/Imagens/PilulaDoSim/VivoSim.png" alt="Vivo SIM" data-description="" />
+                                    <video preload="none" src="file:///C:/Pilula do Sim/Vivo  Sim.mp4"></video>
+                                </li>
+
+                            </ul>
+                            <ul class="amazingslider-thumbnails" style="display:none;">
+                                <li><<img src="~/Imagens/PilulaDoSim/SiteDeCompras.png" alt="Site de Compras" />
+                                <li><img src="~/Imagens/PilulaDoSim/GerenciamentoDeCaixa.png"></li>
+                                <li><img src="~/Imagens/PilulaDoSim/DevStandVenda.png"></li>
+                                <li><img src="~/Imagens/PilulaDoSim/Merchan.png"></li>
+                                <li><img src="~/Imagens/PilulaDoSim/MobileToken.png"></li>
+                                <li><img src="~/Imagens/PilulaDoSim/IDM E GAATI.png"></li>
+                                <li><img src="~/Imagens/PilulaDoSim/SAP.png"></li>
+                                <li><img src="~/Imagens/PilulaDoSim/Vivo360.png"></li>
+                                <li><img src="~/Imagens/PilulaDoSim/VivoGED.png"></li>
+                                <li><img src="~/Imagens/PilulaDoSim/VivoRemedy.png"></li>
+                                <li><img src="~/Imagens/PilulaDoSim/VivoSim.png"></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <script type="text/javascript" src="~/js/pilulasdosim/initslider.js"></script>
+                    @*<script src="https://amazingslider.com/wp-content/uploads/amazingslider/27/sliderengine/initslider.js"></script>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

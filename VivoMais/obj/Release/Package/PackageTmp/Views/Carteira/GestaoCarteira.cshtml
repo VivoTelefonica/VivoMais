@@ -1,0 +1,104 @@
+﻿
+@{
+    ViewBag.Title = "GestaoCarteira";
+    if (Session["TipoMenu"].ToString() != "")
+    {
+        Layout = Session["TipoMenu"].ToString();
+    }
+    else
+    {
+        Session.Clear();
+        Session.Abandon();
+        FormsAuthentication.SignOut();
+        Response.Redirect("/Acesso/Index");
+    }
+}
+
+<style>
+    div#loading2 {
+        width: 200px;
+        height: 100px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        text-align: center;
+        padding: 10px;
+        font: normal 16px Tahoma, Geneva, sans-serif;
+        margin-left: -50px;
+        margin-top: -50px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+
+<script type="text/javascript" src='~/Scripts/jquery-2.2.1.js'></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+
+    google.load("visualization", "1", { packages: ['corechart', 'bar'] });
+    google.setOnLoadCallback(DesenhaGrafico);
+
+    function DesenhaGrafico(response) {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: '/Carteira/GraficoCarteira',
+            success: function (response) {
+
+                var xCarteira = new google.visualization.DataTable();
+                xCarteira.addColumn('string', 'Ddd');
+                xCarteira.addColumn('number', 'Preenchido');
+                xCarteira.addColumn('number', 'Faltosos');
+
+                for (i = 0; i < response.length; i++) {
+                    xCarteira.addRow([response[i].Ddd, response[i].TotalPreenchido, response[i].TotalFaltantes]);
+                }
+
+                var options = {
+                    colors: ['#256067', '#00A3A1'],
+                    width: '100%',
+                    height: 'auto',
+                    is3D: true,
+                    bar: { groupWidth: "90%" },
+                    legend: { position: 'top', alignment: 'start' },
+                    hAxis: { title: 'Ddd' },
+                    vAxis: { title: 'Quantidade' }
+                };
+
+                var chart = new google.visualization.ColumnChart(document.getElementById('DivDefinicaoCarteira'));
+                chart.draw(xCarteira, options);
+
+            },
+            error: function (response) {
+                alert("error!");
+            }
+        });
+        $("#loading2").hide();
+    }
+
+
+</script>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>Carteira</h3>
+        </div>
+    </div>
+
+    <div id="loading2" style="top:50%;left: 50%;">
+        <img id="spinner" alt="Updating ..." src="~/Imagens/aguarde.gif" />
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Definição das Carteiras
+                </div>
+                <div id="DivDefinicaoCarteira" style="height: auto"></div>
+            </div>
+        </div>
+    </div>
+</div>
+

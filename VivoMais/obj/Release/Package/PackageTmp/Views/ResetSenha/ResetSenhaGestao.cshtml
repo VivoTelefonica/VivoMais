@@ -1,0 +1,286 @@
+﻿@model VivoMais.Models.ResetSenhaGraficoViewModel
+@{
+    ViewBag.Title = "ResetSenhaGestao";
+    if (Session["TipoMenu"].ToString() != "")
+    {
+        Layout = Session["TipoMenu"].ToString();
+    }
+    else
+    {
+        Session.Clear();
+        Session.Abandon();
+        FormsAuthentication.SignOut();
+        Response.Redirect("/Acesso/Index");
+    }
+}
+
+<style>
+    div#loading {
+        width: 200px;
+        height: 100px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        text-align: center;
+        padding: 10px;
+        font: normal 16px Tahoma, Geneva, sans-serif;
+        margin-left: -50px;
+        margin-top: -50px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+
+@* Javascript *@
+<script type="text/javascript" src="~/Scripts/jquery-1.8.0.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+
+    google.load("visualization", "1", { packages: ['corechart', 'bar'] });
+
+    $(document).ready(function () {
+
+        teste1();
+
+        teste2();
+
+    });
+
+    function teste1() {
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '/ResetSenha/ResetSenhaMediaSLA',
+            success: function (response) {
+                construiGrafico(response);
+            },
+            error: function (response) {
+                alert("error!");
+            }
+        });
+    }
+
+    function teste2() {
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '/ResetSenha/ResetSenhaGestaoTotal',
+            success: function (response) {
+                DesenhaGrafico(response);
+            },
+            error: function (response) {
+                alert("error!");
+            }
+        });
+    }
+
+
+    function construiGrafico(response) {
+
+        var data7X = new google.visualization.DataTable();
+        data7X.addColumn('string', 'Ddd');
+        data7X.addColumn('number', 'SLA');
+
+        var data8X = new google.visualization.DataTable();
+        data8X.addColumn('string', 'Ddd');
+        data8X.addColumn('number', 'SLA');
+
+        for (i = 0; i < response.length; i++) {
+            if (response[i].Ddd < 80) {
+                data7X.addRow([response[i].Ddd, response[i].Valor]);
+            }
+            else {
+                data8X.addRow([response[i].Ddd, response[i].Valor]);
+            }
+
+        }
+
+        var options = {
+            pointSize: 20,
+            pointShape: 'square',
+            colors: ['#00A3A1'],
+            width: '100%',
+            height: 'auto',
+            hAxis: {
+                title: 'DDD'
+            },
+            vAxis: {
+                title: 'Média SLA'
+            }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('Sla7x'));
+        chart.draw(data7X, options);
+
+        var chart = new google.visualization.LineChart(document.getElementById('Sla8x'));
+        chart.draw(data8X, options);
+    }
+
+    function DesenhaGrafico(response) {
+
+
+        var data7x = new google.visualization.DataTable();
+        data7x.addColumn('string', 'Mes');
+        data7x.addColumn('number', '71');
+        data7x.addColumn({ type: 'number', role: 'annotation' });
+        data7x.addColumn('number', '73');
+        data7x.addColumn({ type: 'number', role: 'annotation' });
+        data7x.addColumn('number', '74');
+        data7x.addColumn({ type: 'number', role: 'annotation' });
+        data7x.addColumn('number', '75');
+        data7x.addColumn({ type: 'number', role: 'annotation' });
+        data7x.addColumn('number', '77');
+        data7x.addColumn({ type: 'number', role: 'annotation' });
+        data7x.addColumn('number', '79');
+        data7x.addColumn({ type: 'number', role: 'annotation' });
+
+        var data8x = new google.visualization.DataTable();
+        data8x.addColumn('string', 'Mes');
+        data8x.addColumn('number', '81');
+        data8x.addColumn({ type: 'number', role: 'annotation' });
+        data8x.addColumn('number', '82');
+        data8x.addColumn({ type: 'number', role: 'annotation' });
+        data8x.addColumn('number', '83');
+        data8x.addColumn({ type: 'number', role: 'annotation' });
+        data8x.addColumn('number', '84');
+        data8x.addColumn({ type: 'number', role: 'annotation' });
+        data8x.addColumn('number', '85');
+        data8x.addColumn({ type: 'number', role: 'annotation' });
+        data8x.addColumn('number', '86');
+        data8x.addColumn({ type: 'number', role: 'annotation' });
+        data8x.addColumn('number', '87');
+        data8x.addColumn({ type: 'number', role: 'annotation' });
+        data8x.addColumn('number', '88');
+        data8x.addColumn({ type: 'number', role: 'annotation' });
+        data8x.addColumn('number', '89');
+        data8x.addColumn({ type: 'number', role: 'annotation' });
+
+
+
+        var xMes = '';
+        var Meses = [];
+        var cont = 0;
+
+        for (i = 0; i < response.length; i++) {
+            if (xMes != response[i].Mes) {
+                Meses[cont] = response[i].Mes;
+                xMes = response[i].Mes;
+                cont++;
+            }
+        }
+
+
+        var Linha = [];
+        var cont2 = 0;
+        for (i = 0; i < Meses.length; i++) {
+            for (y = 0; y < response.length; y++) {
+                if (response[y].Ddd < 80 && Meses[i] == response[y].Mes) {
+                    Linha[cont2] = response[y].Valor;
+                    cont2++;
+                }
+            }
+        }
+
+        var Linha8x = [];
+        var cont8x = 0;
+        for (i = 0; i < Meses.length; i++) {
+            for (y = 0; y < response.length; y++) {
+                if (response[y].Ddd > 80 && Meses[i] == response[y].Mes) {
+                    Linha8x[cont8x] = response[y].Valor;
+                    cont8x++;
+                }
+            }
+
+        }
+
+
+        data7x.addRow([Meses[0], Linha[0], Linha[0], Linha[1], Linha[1], Linha[2], Linha[2], Linha[3], Linha[3], Linha[4], Linha[4], Linha[5], Linha[5]]);
+        data7x.addRow([Meses[1], Linha[6], Linha[6], Linha[7], Linha[7], Linha[8], Linha[8], Linha[9], Linha[9], Linha[10], Linha[10], Linha[11], Linha[11]]);
+        data7x.addRow([Meses[2], Linha[12], Linha[12], Linha[13], Linha[13], Linha[14], Linha[14], Linha[15], Linha[15], Linha[16], Linha[16], Linha[17], Linha[17]]);
+
+
+
+        data8x.addRow([Meses[0], Linha8x[0], Linha8x[0], Linha8x[1], Linha8x[1], Linha8x[2], Linha8x[2], Linha8x[3], Linha8x[3], Linha8x[4], Linha8x[4], Linha8x[5], Linha8x[5], Linha8x[6], Linha8x[6], Linha8x[7], Linha8x[7], Linha8x[8], Linha8x[8]]);
+        data8x.addRow([Meses[1], Linha8x[9], Linha8x[9], Linha8x[10], Linha8x[10], Linha8x[11], Linha8x[11], Linha8x[12], Linha8x[12], Linha8x[13], Linha8x[13], Linha8x[14], Linha8x[14], Linha8x[15], Linha8x[15], Linha8x[16], Linha8x[16], Linha8x[17], Linha8x[17]]);
+        data8x.addRow([Meses[2], Linha8x[18], Linha8x[18], Linha8x[19], Linha8x[19], Linha8x[20], Linha8x[20], Linha8x[21], Linha8x[21], Linha8x[22], Linha8x[22], Linha8x[23], Linha8x[23], Linha8x[24], Linha8x[24], Linha8x[25], Linha8x[25], Linha8x[26], Linha8x[26]]);
+
+
+        var options = {
+            colors: ['#D7EEEB', '#73CAC6', '#00C1BC', '#00A3A1', '#008484', '#256067'],
+            width: '100%',
+            height: 'auto',
+            bar: { groupWidth: "90%" },
+            legend: { position: 'top', alignment: 'start' },
+            hAxis: { title: 'Mês' },
+            vAxis: { title: 'Quantidade' }
+        };
+
+        var options8x = {
+            colors: ['#D7EEEB', '#73CAC6', '#00C1BC', '#00A3A1', '#008484', '#256067', '#6A1773', '#4B0B54', '#34053F'],
+            width: '100%',
+            height: 'auto',
+            is3D: true,
+            bar: { groupWidth: "90%" },
+            legend: { position: 'top', alignment: 'start' },
+            hAxis: { title: 'Mês' },
+            vAxis: { title: 'Quantidade' }
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('QtdTotal7x'));
+        chart.draw(data7x, options);
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('QtdTotal8x'));
+        chart.draw(data8x, options8x);
+
+        $("#loading2").hide();
+    }
+</script>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>Reset de Senha</h3>
+        </div>
+    </div><!--/row-->
+    <hr>
+    <div class="row">
+
+        <div id="loading" style="display: none; top:50%;left: 50%;">
+            <img id="spinner" alt="Updating ..." src="~/Imagens/aguarde.gif" />
+        </div>
+
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Média SLA 7x
+                </div>
+                <div id="Sla7x" style="height: auto"></div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Média SLA 8x
+                </div>
+                <div id="Sla8x" style="height: auto;"></div>
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Qtd de Solicitações - 7x
+                </div>
+                <div id="QtdTotal7x" style="height: auto"></div>
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Qtd de Solicitações - 8x
+                </div>
+                <div id="QtdTotal8x" style="height: auto"></div>
+            </div>
+        </div>
+    </div>
+</div>
+

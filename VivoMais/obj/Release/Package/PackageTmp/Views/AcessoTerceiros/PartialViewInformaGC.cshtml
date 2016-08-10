@@ -1,0 +1,112 @@
+﻿@model VivoMais.Models.AcessoTerceiroViewModel
+
+<script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#example').dataTable({
+            order: [[3, "desc"]],
+            bHeader: true,
+        });
+    });
+
+    function AceitaSenha(id) {
+
+        if (confirm('Tem certeza que deseja aceitar a Senha?')) {
+            $("#loading").show();
+            $.ajax({
+                type: 'GET',
+                url: '/AcessoTerceiros/AceitarSenhaAcesso',
+                dataType: 'html',
+                cache: false,
+                async: true,
+                data: { Id: id },
+                success: function (response) {
+                    $("#loading").hide();
+                    alert('Acesso liberado com sucesso!');
+                    window.location.href = '/AcessoTerceiros/ConsultarAcessosTerceiros';
+                },
+                error: function (response) {
+                    alert(response);
+                    $("#loading").hide();
+                }
+            });
+        }
+    }
+
+    function RejeitaSenha(id) {
+        if (confirm('Tem certeza que deseja rejeitar o Acesso?')) {
+            $("#loading").show();
+            $.ajax({
+                type: 'POST',
+                url: '/AcessoTerceiros/RejeiteSenhaAcesso',
+                dataType: 'html',
+                cache: false,
+                async: true,
+                data: { Id: id },
+                success: function (response) {
+                    $("#loading").hide();
+                    alert('Acesso rejeitado com sucesso!');
+                    window.location.href = '/AcessoTerceiros/ConsultarAcessosTerceiros';
+                },
+                error: function (response) {
+                    alert("error!");
+                    $("#loading").hide();
+                }
+            });
+        }
+    }
+
+</script>
+
+<div id="PartialRetornoInformaGC" class="panel panel-default">
+    <div class="panel-body">
+        <div class="dataTable_wrapper">
+            <table class="table table-striped table-bordered table-hover" id="example">
+                <thead>
+                    <tr>
+                        <th>NOME</th>
+                        <th>MATRICULA</th>
+                        <th>STATUS</th>
+                        <th>SLA</th>
+                        <th>LOGIN</th>
+                        <th>SENHA</th>
+                        <th>ACEITAR</th>
+                        <th>RECUSAR</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (VivoMais.Repositorio.Entidades.AcessoTerceiros Acesso in Model.TerceirosAberto)
+                    {
+                        <tr class="odd gradeX">
+                            <td>@Acesso.Nome</td>
+                            <td>@Acesso.Matricula</td>
+                            <td>@Acesso.Status</td>
+                            <td>@Acesso.Sla</td>
+                            <td>@Acesso.Login</td>
+                            <td>@Acesso.Senha</td>
+
+                            @if (Acesso.Login != "")
+                            {
+                                <td><input type="image" src="~/Imagens/Icones/Aceitar.ico" onclick="AceitaSenha(@Acesso.Id);" style="margin-left: 30%;" width="28" height="28"></td>
+                                <td><input type="image" src="~/Imagens/Icones/Negar.ico" onclick="RejeitaSenha(@Acesso.Id);" style="margin-left:30%;" width="28" height="28"></td>
+                            }
+                            else
+                            {
+                                <td></td>
+                                <td></td>
+                            }
+
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

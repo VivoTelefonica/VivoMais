@@ -1,0 +1,80 @@
+﻿@model VivoMais.Models.BookPlanosViewModel
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#TableSaving').dataTable({
+            "scrollY": 400,
+            "scrollX": true
+        });
+    });
+</script>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="dataTable_wrapper">
+            <table class="table table-striped table-bordered nowrap" id="example">
+                <thead>
+                    <tr>
+                        <th nowrap>Plano</th>
+                        <th nowrap>Nomenclatura Sistêmica - Vivo 360</th>
+                        <th nowrap>Preço Assinatura</th>
+                        <th nowrap>Preço Franquia</th>
+                        <th nowrap>R$ Total</th>
+                        <th nowrap>Plano SAP - Tabela Vivo Mais</th>
+                        <th nowrap>Plano SAP - Tabela Renova</th>
+                        <th nowrap>Franquia Outras Operadoras - Ligação Local</th>
+                        <th nowrap>Franquia de Dados</th>
+                        <th nowrap>Nº de Multivivos</th>
+                        <th nowrap>Multivivos Compatíveis</th>
+                        <th nowrap>Código Homologação</th>
+                        <th nowrap>Matriz Oferta</th>
+                        <th nowrap>Fidelização/Contrato</th>
+                        <th nowrap>R$ da Multa</th>
+                        <th nowrap>Pacote Adicional de Internet</th>
+                        <th nowrap> de Dados</th>
+                        <th nowrap>Promoções Vigentes</th>
+                        <th nowrap>Validade das Promoções</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+
+
+                    @if (Model != null)
+                    {
+                        foreach (VivoMais.Repositorio.Entidades.BookPlanos Book in Model.Book)
+                        {
+                            <tr class="odd gradeX nowrap">
+                                <td nowrad>@Book.Plano</td>
+                                <td nowrad>@Book.NomenclaturaSistemicaVivo360</td>
+                                <td nowrad>@Book.PrecoAssinatura</td>
+                                <td nowrad>@Book.PrecoFranquia</td>
+                                <td nowrad>@Book.ValorTotal</td>
+                                <td nowrad>@Book.NomePlanoSapTabelaMaisVivo</td>
+                                <td nowrad>@Book.NomePlanoSapTabelaRenova</td>
+                                <td nowrad>@Book.FranquiaOutrasOperadorasLigaçãoLocal</td>
+                                <td nowrad>@Book.FranquiaDados</td>
+                                <td nowrad>@Book.QtdMultivivos</td>
+                                <td nowrad>@Book.MultivivosCompatIveis</td>
+                                <td nowrad>@Book.CodigoHomologacao</td>
+                                <td nowrad>@Book.MatrizOferta</td>
+                                <td nowrad>@Book.FidelizaçãoContrato</td>
+                                <td nowrad>@Book.ValorMulta</td>
+                                <td nowrad>@Book.PacoteAdicionalInternet</td>
+                                <td nowrad>@Book.BloqueioDados</td>
+                                <td nowrad>@Book.PromoçõesVigentes</td>
+                                <td nowrad>@Book.ValidadePromoções</td>
+                            </tr>
+                        }
+                    }
+
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

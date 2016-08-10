@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "ImportarProtocolo";
+    if (Session["TipoMenu"].ToString() != "")
+    {
+        Layout = Session["TipoMenu"].ToString();
+    }
+    else
+    {
+        Session.Clear();
+        Session.Abandon();
+        FormsAuthentication.SignOut();
+        Response.Redirect("/Acesso/Index");
+    }
+}
+
+@* Javascript *@
+<script type="text/javascript" src="~/Scripts/jquery-1.8.0.js"></script>
+<script type="text/javascript" src="~/Scripts/ajax.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+@if (null != TempData["MSG"])
+{
+    <script type="text/javascript">
+        alert(unescape('@TempData["MSG"]'));
+    </script>
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">Importar Protocolo</h3>
+    </div>
+</div>
+<div class="panel-body">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+
+                @using (Html.BeginForm("ImportarArquivoProtocolo", "AcaoMarketing", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>PROTOCOLO:</label>
+                            <input type="file" class="form-control" name="UploadedFile" style="width:40%" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input id="btnConsultar" class="btn btn-primary" style="width:150px" type="submit" value="Importar" />
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

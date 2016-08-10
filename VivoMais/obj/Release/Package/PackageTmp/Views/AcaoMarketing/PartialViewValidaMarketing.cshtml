@@ -1,0 +1,359 @@
+﻿@model VivoMais.Models.AcaoMarketingViewModel
+
+<div class="modal-body">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">VIVO MAIS+</h4>
+    </div>
+
+    <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                @Html.HiddenFor(x => x.AcaoMarketing.Id, new { @id = "txtId", @class = "form-control", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label>MES DA AÇÃO:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.MesAcao, new { @id = "DDLMesAcao", @class = "form-control", @readonly = "readonly" })
+                            </div>
+                            <div class="col-sm-10">
+                                <label>REGIONAL:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.Parceiro.Regional, new { @id = "DDLRegional", @class = "form-control", style = "width: 8%", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label>UF:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.Parceiro.Uf, new { @id = "DDLUf", @readonly = "readonly", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-10">
+                                <label>DDD:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.Parceiro.Ddd, new { @id = "DDLDdd", @readonly = "readonly", @class = "form-control", style = "width: 18%" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <label>REDE:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.Parceiro.Rede, new { @id = "DDLRede", @readonly = "readonly", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-7">
+                                <label>PONTO DE VENDA:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.Parceiro.Vendedor, new { @id = "DDLVendedor", @class = "form-control", style = "width: 20%", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label>VERBA:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.OrigemVerba, new { @id = "txtOrigemVerba", @class = "form-control", @readonly = "readonly", style = "width: 20%" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <label>RAZÃO SOCIAL:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.Parceiro.RazaoSocial, new { @id = "txtRazaoSocial", @readonly = "readonly", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label>CANAL:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.Parceiro.Canal, new { @id = "txtCanal", @readonly = "readonly", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-5">
+                                <label>NÚMERO DE IXO:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.Parceiro.Ixos, new { @id = "txtIxos", @class = "form-control", @readonly = "readonly", style = "width: 35%" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label>NOME DO CONTATO DA REDE:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.NomeContatoRede, new { @id = "txtNomeContatoRede", @readonly = "readonly", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>TELEFONE DO CONTATO DA REDE:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.TelefoneContatoRede, new { @id = "txtTelefoneContatoRede", @readonly = "readonly", @OnKeyPress = "formatarMascara('##-#####-####', this)", @maxlength = "13", @class = "form-control" })
+                            </div>
+                            <div class="col-sm-5">
+                                <label>EMAIL DO CONTATO DA REDE:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.EmailContatoRede, new { @id = "txtEmailContatoRede", @readonly = "readonly", @class = "form-control", style = "width: 60%" })
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>TIPO DE MÍDIA:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.Midia.IdTipoMidia, new { @id = "DDLTipoMidia", @class = "form-control", @readonly = "readonly" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>MÍDIA DETALHADA:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.MidiaDetalhada.MidiaDetalhada, new { @id = "DDLMidiaDetalhada", @class = "form-control", @readonly = "readonly" })
+                            </div>
+                            <div class="col-sm-6">
+                                <label>CAMPANHA MACRO:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.CampanhaMacro, new { @id = "DDLCampanhaMacro", @class = "form-control", style = "width: 50%", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>FOCO PRINCIPAL:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.FocoPrincipal, new { @id = "DDLFocoPrincipal", @class = "form-control", @readonly = "readonly" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>FORMATO DO MATERIAL:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.FormatoMaterial, new { @id = "txtFormatoMaterial", @class = "form-control", @readonly = "readonly" })
+                            </div>
+                            <div class="col-sm-6">
+                                <label>VEÍCULO COM TELEFONE:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.Veiculo, new { @id = "txtVeiculo", @class = "form-control", style = "width: 75%", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-7">
+                                <label>DESCRIÇÃO DA AÇÃO:</label>
+                                @Html.TextAreaFor(x => x.AcaoMarketing.DescricaoAcao, new { @id = "txtDescricaoAcao", @class = "form-control", @readonly = "readonly" })
+                            </div>
+
+                            <div class="col-sm-5">
+                                <label>QUANTIDADE DE PEÇAS:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.QtdAcoes, new { @id = "txtQtdPecas", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width: 30%", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="row">
+                                <div class="col-sm-1">
+                                    <label>DIAS DA AÇÃO:</label>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label1">1:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia1, new { @id = "txt1", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label2">2:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia2, new { @id = "txt2", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label3">3:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia3, new { @id = "txt3", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label4">4:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia4, new { @id = "txt4", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label5">5:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia5, new { @id = "txt5", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label6">6:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia6, new { @id = "txt6", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label7">7:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia7, new { @id = "txt7", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label8">8:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia8, new { @id = "txt8", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label9">9:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia9, new { @id = "txt9", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label10">10:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia10, new { @id = "txt10", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-1">
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label11">11:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia11, new { @id = "txt11", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label12">12:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia12, new { @id = "txt12", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label13">13:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia13, new { @id = "txt13", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label14">14:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia14, new { @id = "txt14", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label15">15:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia15, new { @id = "txt15", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label16">16:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia16, new { @id = "txt16", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label17">17:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia17, new { @id = "txt17", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label18">18:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia18, new { @id = "txt18", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label19">19:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia19, new { @id = "txt19", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label20">20:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia20, new { @id = "txt20", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-1">
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label21">21:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia21, new { @id = "txt21", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label22">22:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia22, new { @id = "txt22", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label23">23:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia23, new { @id = "txt23", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label24">24:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia24, new { @id = "txt24", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label25">25:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia25, new { @id = "txt25", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label26">26:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia26, new { @id = "txt26", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label27">27:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia27, new { @id = "txt27", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label28">28:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia28, new { @id = "txt28", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label29">29:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia29, new { @id = "txt29", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label30">30:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia30, new { @id = "txt30", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                                <div class="col-sm-1">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-1">
+                                    <label></label>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label id="Label31">31:</label>
+                                    @Html.TextBoxFor(x => x.AcaoMarketing.Dia31, new { @id = "txt31", @maxlength = "3", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width:70%", @readonly = "readonly" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label>INSERÇÕES:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.Insercoes, new { @id = "txtInsercoes", @readonly = "readonly", @enable = "false", @onkeypress = "return formatoNumero(event)", @class = "form-control" })
+                            </div>
+
+                            <div class="col-sm-2">
+                                <label>MÍDIA EXCLUSIVA VIVO:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.MidiaExclusivaVivo, new { @id = "DDLexclusiva", @onkeypress = "return formatoNumero(event)", @class = "form-control", @readonly = "readonly" })
+                            </div>
+
+                            <div class="col-sm-8">
+                                <label>CUSTO UNITARIO:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.CustoUnitario, new { @id = "txtCustoUnitario", @class = "form-control", style = "width: 20%", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label>VALOR TOTAL DA AÇÃO:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.ValorTotalAcao, new { @id = "txtValorTotalAcao", @onKeydown = "FormataNumero(this,20,event,2)", @onkeypress = "return formatoNumero(event)", @class = "form-control", @readonly = "readonly" })
+                            </div>
+
+                            <div class="col-sm-2">
+                                <label>% DA VIVO:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.PercentualParticipacaoVivo, new { @id = "txtPercentualVivo", @onkeypress = "return formatoNumeroVirgula(event)", @Maxlength = "5", @class = "form-control", @readonly = "readonly" })
+                            </div>
+
+                            <div class="col-sm-8">
+                                <label>VALOR TOTAL DA VIVO:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.ValorTotalVivo, new { @id = "txtValorTotalVivo", @onKeydown = "FormataNumero(this,20,event,2)", @readonly = "readonly", @onkeypress = "return formatoNumero(event)", @class = "form-control", style = "width: 20%" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-1">
+                                <label>% DA REDE:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.PercentualRede, new { @id = "txtPercentualParticipacaoRede", @readonly = "readonly", @class = "form-control" })
+                            </div>
+
+                            <div class="col-sm-11">
+                                <label>VALOR TOTAL DA REDE:</label>
+                                @Html.TextBoxFor(x => x.AcaoMarketing.ValorTotalRede, new { @id = "txtValorTotalRede", @readonly = "readonly", @class = "form-control", style = "width: 20%" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <input id="btnReprovar" class="btn btn-danger pull-left" onclick="AtualizarStatus('8')" style="width:150px" type="submit" value="Reprovar" />
+                            </div>
+                            <div class="col-sm-4">
+                                <input id="btnRetornaGc" class="btn btn-primary" onclick="AtualizarStatus('6')" style="margin-left: 20%;width:150px" type="submit" value="Retornar ao GC" />
+                            </div>
+                            <div class="col-sm-4">
+
+                                @if (Model.AcaoMarketing.Status != null)
+                                {
+                                    if (Model.AcaoMarketing.Status.Descricao == "AGUARDANDO VALIDAÇÃO DO MARKETING TERRITORIAL")
+                                    {
+                                        <input id="btnValidar" class="btn btn-success pull-right" onclick="AtualizarStatus('3')" style="width:150px" type="submit" value="Validar" />
+                                    }
+                                    else
+                                    {
+                                        <input id="btnValidar" class="btn btn-success pull-right" onclick="AtualizarStatus('4')" style="width:150px" type="submit" value="Validar" />
+                                    }
+                                }
+                                    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
